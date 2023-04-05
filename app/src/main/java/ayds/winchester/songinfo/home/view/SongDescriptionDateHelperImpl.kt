@@ -13,4 +13,14 @@ class SongDescriptionDateHelperImpl(private val releaseDate: String, private val
             else -> formatearDay(releaseDate)
         }
     }
+
+    private fun isALeapYear(year: String): Boolean{
+        val n = year.toInt()
+        return (n % 4 == 0) && (n % 100 != 0 || n % 400 == 0)
+    }
+
+    private fun formatearYear(date: String): String{
+        val isALeapYear = if(isALeapYear(date)) "(is a leap year)" else "(not a leap year)"
+        return date + isALeapYear
+    }
 }
