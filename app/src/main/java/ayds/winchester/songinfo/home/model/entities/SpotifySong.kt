@@ -1,5 +1,7 @@
 package ayds.winchester.songinfo.home.model.entities
 
+import ayds.winchester.songinfo.home.view.SongDescriptionDateHelperImpl
+import ayds.winchester.songinfo.home.view.SongDescriptionDateHelper
 sealed class Song {
 
     data class SpotifySong(
@@ -8,12 +10,13 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
+        val releaseDatePrecision: String,
         val spotifyUrl: String,
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song() {
-
-        val year: String = releaseDate.split("-").first()
+        private val formateador: SongDescriptionDateHelper = SongDescriptionDateHelperImpl(releaseDate, releaseDatePrecision)
+        val releaseFormateado: String = formateador.formatear()
     }
 
     object EmptySong : Song()
