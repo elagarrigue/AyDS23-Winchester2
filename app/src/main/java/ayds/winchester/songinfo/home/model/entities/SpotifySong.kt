@@ -15,7 +15,7 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song() {
-        private val formateador: SongDescriptionDateHelper = SongDescriptionDateHelperImpl(releaseDate, releaseDatePrecision)
+        private val formateador: SongDescriptionDateHelper = SongDescriptionDateHelperImpl(this)
         val releaseFormateado: String = formateador.formatear()
     }
 
