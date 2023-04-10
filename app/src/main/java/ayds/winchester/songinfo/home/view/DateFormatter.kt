@@ -1,11 +1,13 @@
 package ayds.winchester.songinfo.home.view
 
+import ayds.winchester.songinfo.home.model.entities.Song
+
 object DateFormatterFactory {
-    fun get(releaseDate: String, releaseDatePrecision: String) =
-        when (releaseDatePrecision) {
-            "year" -> YearFormatter(releaseDate)
-            "month" -> MonthFormatter(releaseDate)
-            else -> DayFormatter(releaseDate)
+    fun get(song: Song.SpotifySong) =
+        when (song.releaseDatePrecision) {
+            "year" -> YearFormatter(song.releaseDate)
+            "month" -> MonthFormatter(song.releaseDate)
+            else -> DayFormatter(song.releaseDate)
         }
 }
 sealed class DateFormatter(val releaseDate: String){

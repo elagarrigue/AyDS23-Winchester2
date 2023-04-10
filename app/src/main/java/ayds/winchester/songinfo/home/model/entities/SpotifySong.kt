@@ -14,7 +14,7 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song() {
-        private val formateador: DateFormatter = DateFormatterFactory.get(releaseDate, releaseDatePrecision)
+        private val formateador: DateFormatter = DateFormatterFactory.get(this)
         val releaseFormateado: String = formateador.formatear()
     }
 
