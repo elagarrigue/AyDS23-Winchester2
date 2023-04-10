@@ -1,5 +1,4 @@
 package ayds.winchester.songinfo.home.model.entities
-import ayds.winchester.songinfo.home.view.*
 
 sealed class Song {
 
@@ -13,10 +12,7 @@ sealed class Song {
         val spotifyUrl: String,
         val imageUrl: String,
         var isLocallyStored: Boolean = false
-    ) : Song() {
-        private val formateador: DateFormatter = DateFormatterFactory.get(this)
-        val releaseFormateado: String = formateador.formatear()
-    }
+    ) : Song() {}
 
     object EmptySong : Song()
 }

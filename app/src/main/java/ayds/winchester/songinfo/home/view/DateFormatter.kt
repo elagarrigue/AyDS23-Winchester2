@@ -2,7 +2,7 @@ package ayds.winchester.songinfo.home.view
 
 import ayds.winchester.songinfo.home.model.entities.Song
 
-object DateFormatterFactory {
+class DateFormatterFactory {
     fun get(song: Song.SpotifySong) =
         when (song.releaseDatePrecision) {
             "year" -> YearFormatter(song.releaseDate)
