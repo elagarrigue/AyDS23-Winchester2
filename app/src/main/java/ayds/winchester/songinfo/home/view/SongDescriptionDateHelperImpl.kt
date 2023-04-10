@@ -3,16 +3,16 @@ package ayds.winchester.songinfo.home.view
 object DateFormatterFactory {
     fun get(releaseDate: String, releaseDatePrecision: String) =
         when (releaseDatePrecision) {
-            "year" -> SongDescriptionDateHelperYear(releaseDate)
-            "month" -> SongDescriptionDateHelperMonth(releaseDate)
-            else -> SongDescriptionDateHelperDay(releaseDate)
+            "year" -> YearFormatter(releaseDate)
+            "month" -> MonthFormatter(releaseDate)
+            else -> DayFormatter(releaseDate)
         }
 }
-sealed class SongDescriptionDateHelper(val releaseDate: String){
+sealed class DateFormatter(val releaseDate: String){
     abstract fun formatear(): String
 }
 
-class SongDescriptionDateHelperDay(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+class DayFormatter(releaseDate: String): DateFormatter(releaseDate){
     override fun formatear(): String{
         val year = releaseDate.subSequence(0,4)
         val month = releaseDate.subSequence(5,7)
@@ -21,7 +21,7 @@ class SongDescriptionDateHelperDay(releaseDate: String): SongDescriptionDateHelp
     }
 }
 
-class SongDescriptionDateHelperMonth(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+class MonthFormatter(releaseDate: String): DateFormatter(releaseDate){
     override fun formatear(): String{
         val result = when(releaseDate.subSequence(5,7)){
             "01" -> "January, "
@@ -41,7 +41,7 @@ class SongDescriptionDateHelperMonth(releaseDate: String): SongDescriptionDateHe
         return result + releaseDate.subSequence(0,4)
     }
 }
-class SongDescriptionDateHelperYear(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+class YearFormatter(releaseDate: String): DateFormatter(releaseDate){
     override fun formatear(): String{
         val isALeapYear = if(isALeapYear(releaseDate)) " (is a leap year)" else " (not a leap year)"
         return releaseDate + isALeapYear
