@@ -1,8 +1,5 @@
 package ayds.winchester.songinfo.home.model.entities
-import ayds.winchester.songinfo.home.view.SongDescriptionDateHelper
-import ayds.winchester.songinfo.home.view.SongDescriptionDateHelperDay
-import ayds.winchester.songinfo.home.view.SongDescriptionDateHelperMonth
-import ayds.winchester.songinfo.home.view.SongDescriptionDateHelperYear
+import ayds.winchester.songinfo.home.view.*
 
 sealed class Song {
 
@@ -17,12 +14,8 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song() {
-        private val formateador: SongDescriptionDateHelper = when(releaseDatePrecision){
-            "year" -> SongDescriptionDateHelperYear()
-            "month" -> SongDescriptionDateHelperMonth()
-            else -> SongDescriptionDateHelperDay()
-        }
-        val releaseFormateado: String = formateador.formatear(releaseDate)
+        private val formateador: SongDescriptionDateHelper = DateFormatterFactory.get(releaseDate, releaseDatePrecision)
+        val releaseFormateado: String = formateador.formatear()
     }
 
     object EmptySong : Song()

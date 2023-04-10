@@ -1,22 +1,29 @@
 package ayds.winchester.songinfo.home.view
 
-
-interface SongDescriptionDateHelper{
-    fun formatear(date: String): String
+object DateFormatterFactory {
+    fun get(releaseDate: String, releaseDatePrecision: String) =
+        when (releaseDatePrecision) {
+            "year" -> SongDescriptionDateHelperYear(releaseDate)
+            "month" -> SongDescriptionDateHelperMonth(releaseDate)
+            else -> SongDescriptionDateHelperDay(releaseDate)
+        }
+}
+sealed class SongDescriptionDateHelper(val releaseDate: String){
+    abstract fun formatear(): String
 }
 
-class SongDescriptionDateHelperDay(): SongDescriptionDateHelper{
-    override fun formatear(date: String): String{
-        val year = date.subSequence(0,4)
-        val month = date.subSequence(5,7)
-        val day = date.subSequence(8,10)
+class SongDescriptionDateHelperDay(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+    override fun formatear(): String{
+        val year = releaseDate.subSequence(0,4)
+        val month = releaseDate.subSequence(5,7)
+        val day = releaseDate.subSequence(8,10)
         return "$day/$month/$year"
     }
 }
 
-class SongDescriptionDateHelperMonth(): SongDescriptionDateHelper{
-    override fun formatear(date: String): String{
-        val result = when(date.subSequence(5,7)){
+class SongDescriptionDateHelperMonth(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+    override fun formatear(): String{
+        val result = when(releaseDate.subSequence(5,7)){
             "01" -> "January, "
             "02" -> "February, "
             "03" -> "March, "
@@ -31,13 +38,13 @@ class SongDescriptionDateHelperMonth(): SongDescriptionDateHelper{
             "12" -> "December, "
             else -> ""
         }
-        return result + date.subSequence(0,4)
+        return result + releaseDate.subSequence(0,4)
     }
 }
-class SongDescriptionDateHelperYear(): SongDescriptionDateHelper{
-    override fun formatear(date: String): String{
-        val isALeapYear = if(isALeapYear(date)) " (is a leap year)" else " (not a leap year)"
-        return date + isALeapYear
+class SongDescriptionDateHelperYear(releaseDate: String): SongDescriptionDateHelper(releaseDate){
+    override fun formatear(): String{
+        val isALeapYear = if(isALeapYear(releaseDate)) " (is a leap year)" else " (not a leap year)"
+        return releaseDate + isALeapYear
     }
 
     private fun isALeapYear(year: String): Boolean{
