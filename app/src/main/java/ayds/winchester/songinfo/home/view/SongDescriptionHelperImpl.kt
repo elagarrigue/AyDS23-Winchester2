@@ -24,5 +24,5 @@ internal class SongDescriptionHelperImpl(private val dateFormatterFactory: DateF
     }
 
     private fun SpotifySong.getFormattedReleaseDate() =
-        dateFormatterFactory.get(this).formatear()
+        dateFormatterFactory.get(this).format()
 }

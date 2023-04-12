@@ -1,20 +1,22 @@
 package ayds.winchester.songinfo.home.view
 
+const val DAY = 2
+const val MONTH = 1
+const val YEAR = 0
+
 sealed class DateFormatter(val releaseDate: String) {
-    abstract fun formatear(): String
+    abstract fun format(): String
 }
 
 class DayFormatter(releaseDate: String) : DateFormatter(releaseDate) {
-    override fun formatear(): String {
-        val year = releaseDate.subSequence(0, 4)
-        val month = releaseDate.subSequence(5, 7)
-        val day = releaseDate.subSequence(8, 10)
-        return "$day/$month/$year"
+    override fun format(): String {
+        val yearMonthDay = this.releaseDate.split("-")
+        return "${yearMonthDay[DAY]}/${yearMonthDay[MONTH]}/${yearMonthDay[YEAR]}"
     }
 }
 
 class MonthFormatter(releaseDate: String) : DateFormatter(releaseDate) {
-    override fun formatear(): String {
+    override fun format(): String {
         val result = when (releaseDate.subSequence(5, 7)) {
             "01" -> "January, "
             "02" -> "February, "
@@ -35,11 +37,8 @@ class MonthFormatter(releaseDate: String) : DateFormatter(releaseDate) {
 }
 
 class YearFormatter(releaseDate: String) : DateFormatter(releaseDate) {
-    override fun formatear(): String {
-        val isALeapYear =
-            if (isALeapYear(releaseDate)) " (is a leap year)" else " (not a leap year)"
-        return releaseDate + isALeapYear
-    }
+    override fun format() =
+        "$releaseDate ${if (isALeapYear(releaseDate)) "(is a leap year)" else "(not a leap year)"}"
 
     private fun isALeapYear(year: String): Boolean {
         val n = year.toInt()
