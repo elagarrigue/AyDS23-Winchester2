@@ -4,18 +4,18 @@ const val DAY = 2
 const val MONTH = 1
 const val YEAR = 0
 
-sealed class DateFormatter(val releaseDate: String) {
-    abstract fun format(): String
+interface DateFormatter {
+     fun format(): String
 }
 
-class DayFormatter(releaseDate: String) : DateFormatter(releaseDate) {
+class DayFormatter(private val releaseDate: String) : DateFormatter {
     override fun format(): String {
         val yearMonthDay = this.releaseDate.split("-")
         return "${yearMonthDay[DAY]}/${yearMonthDay[MONTH]}/${yearMonthDay[YEAR]}"
     }
 }
 
-class MonthFormatter(releaseDate: String) : DateFormatter(releaseDate) {
+class MonthFormatter(private val releaseDate: String) : DateFormatter {
     override fun format(): String {
         val result = when (releaseDate.subSequence(5, 7)) {
             "01" -> "January, "
@@ -36,7 +36,7 @@ class MonthFormatter(releaseDate: String) : DateFormatter(releaseDate) {
     }
 }
 
-class YearFormatter(releaseDate: String) : DateFormatter(releaseDate) {
+class YearFormatter(private val releaseDate: String) : DateFormatter {
     override fun format() =
         "$releaseDate ${if (isALeapYear(releaseDate)) "(is a leap year)" else "(not a leap year)"}"
 
