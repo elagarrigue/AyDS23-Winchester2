@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,10 +19,9 @@ import java.io.IOException
 import java.util.*
 
 class OtherInfoWindow : AppCompatActivity() {
-    private var textPane2: TextView? = null
+    private lateinit var textPane2: TextView
+    private lateinit var dataBase: DataBase
 
-    //private JPanel imagePanel;
-    // private JLabel posterImageLabel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -39,7 +37,6 @@ class OtherInfoWindow : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
-        Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
             if (text != null) { // exists in db
@@ -48,7 +45,6 @@ class OtherInfoWindow : AppCompatActivity() {
                 val callResponse: Response<String>
                 try {
                     callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
-                    println("JSON " + callResponse.body())
                     val gson = Gson()
                     val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
                     val query = jobj["query"].asJsonObject
@@ -71,13 +67,11 @@ class OtherInfoWindow : AppCompatActivity() {
                         startActivity(intent)
                     }
                 } catch (e1: IOException) {
-                    Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
                 }
             }
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
-            Log.e("TAG", "Get Image from $imageUrl")
             val finalText = text
             runOnUiThread {
                 Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
@@ -86,12 +80,9 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private var dataBase: DataBase? = null
     private fun open(artist: String?) {
         dataBase = DataBase(this)
         DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
         getARtistInfo(artist)
     }
 
