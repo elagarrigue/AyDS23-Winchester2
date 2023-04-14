@@ -45,3 +45,7 @@ internal class YearFormatter(private val releaseDate: String) : DateFormatter {
         return (n % 4 == 0) && (n % 100 != 0 || n % 400 == 0)
     }
 }
+
+internal class DefaultFormatter(private val releaseDate: String) : DateFormatter {
+    override fun format() = releaseDate
+}
