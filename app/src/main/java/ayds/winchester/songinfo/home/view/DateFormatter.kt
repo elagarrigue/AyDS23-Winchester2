@@ -1,21 +1,21 @@
 package ayds.winchester.songinfo.home.view
 
-const val DAY = 2
-const val MONTH = 1
-const val YEAR = 0
+private const val DAY = 2
+private const val MONTH = 1
+private const val YEAR = 0
 
 interface DateFormatter {
      fun format(): String
 }
 
-class DayFormatter(private val releaseDate: String) : DateFormatter {
+internal class DayFormatter(private val releaseDate: String) : DateFormatter {
     override fun format(): String {
         val yearMonthDay = this.releaseDate.split("-")
         return "${yearMonthDay[DAY]}/${yearMonthDay[MONTH]}/${yearMonthDay[YEAR]}"
     }
 }
 
-class MonthFormatter(private val releaseDate: String) : DateFormatter {
+internal class MonthFormatter(private val releaseDate: String) : DateFormatter {
     override fun format(): String {
         val result = when (releaseDate.subSequence(5, 7)) {
             "01" -> "January, "
@@ -36,7 +36,7 @@ class MonthFormatter(private val releaseDate: String) : DateFormatter {
     }
 }
 
-class YearFormatter(private val releaseDate: String) : DateFormatter {
+internal class YearFormatter(private val releaseDate: String) : DateFormatter {
     override fun format() =
         "$releaseDate ${if (isALeapYear(releaseDate)) "(is a leap year)" else "(not a leap year)"}"
 
