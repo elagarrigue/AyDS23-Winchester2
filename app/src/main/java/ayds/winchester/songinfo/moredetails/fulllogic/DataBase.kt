@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
@@ -19,19 +20,8 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
                 val statement: Statement = connection.createStatement()
                 statement.queryTimeout = 30 // set timeout to 30 sec.
-
-                //statement.executeUpdate("drop table if exists person");
-                //statement.executeUpdate("create table person (id integer, name string)");
-                //statement.executeUpdate("insert into person values(1, 'leo')");
-                //statement.executeUpdate("insert into person values(2, 'yui')");
-                val rs = statement.executeQuery("select * from artists")
-                while (rs.next()) {
-                    // read the result set
-                    println("id = " + rs.getInt("id"))
-                    println("artist = " + rs.getString("artist"))
-                    println("info = " + rs.getString("info"))
-                    println("source = " + rs.getString("source"))
-                }
+                val rs = getResultSet(statement)
+                readResultSet(rs)
             } catch (e: SQLException) {
                 // if the error message is "out of memory",
                 // it probably means no database file is found
@@ -43,6 +33,16 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                     // connection close failed.
                     System.err.println(e)
                 }
+            }
+        }
+        private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
+        private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet?
+            while (rs.next()) {
+                // read the result set
+                println("id = " + rs.getInt("id"))
+                println("artist = " + rs.getString("artist"))
+                println("info = " + rs.getString("info"))
+                println("source = " + rs.getString("source"))
             }
         }
 
@@ -108,7 +108,4 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    private fun createDataBaseConnection(){
-
-    }
 }
