@@ -11,7 +11,6 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
-
     companion object {
         fun testDB() {
             var connection: Connection? = null
@@ -39,7 +38,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 System.err.println(e.message)
             } finally {
                 try {
-                    if (connection != null) connection.close()
+                    connection?.close()
                 } catch (e: SQLException) {
                     // connection close failed.
                     System.err.println(e)
