@@ -11,10 +11,10 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
-    var connection: Connection? = null
 
     companion object {
         fun testDB() {
+            var connection: Connection? = null
             try {
                 // create a database connection
                 connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
@@ -108,4 +108,8 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+
+    private fun createDataBaseConnection(){
+
+    }
 }
