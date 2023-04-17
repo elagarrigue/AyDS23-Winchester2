@@ -13,13 +13,10 @@ import java.sql.Statement
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     companion object {
+        private lateinit var connection: Connection
         fun testDB() {
-            var connection: Connection? = null
             try {
-                // create a database connection
-                connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
-                val statement: Statement = connection.createStatement()
-                statement.queryTimeout = 30 // set timeout to 30 sec.
+                val statement: Statement = createDataBaseConnection()
                 val rs = getResultSet(statement)
                 readResultSet(rs)
             } catch (e: SQLException) {
@@ -38,12 +35,18 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
         private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet?
             while (rs.next()) {
-                // read the result set
                 println("id = " + rs.getInt("id"))
                 println("artist = " + rs.getString("artist"))
                 println("info = " + rs.getString("info"))
                 println("source = " + rs.getString("source"))
             }
+        }
+
+        private fun createDataBaseConnection(): Statement {
+            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
+            val statement: Statement = connection.createStatement()
+            statement.queryTimeout = 30 // set timeout to 30 sec.
+            return statement
         }
 
         @JvmStatic
