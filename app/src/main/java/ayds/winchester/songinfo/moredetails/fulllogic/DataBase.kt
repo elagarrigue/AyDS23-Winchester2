@@ -58,20 +58,16 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = getDBInReadMode(dbHelper)
 
-            // Filter results WHERE "title" = 'My Title'
-            val selection = "$COLUMN_ARTIST = ?"
-            val selectionArgs = arrayOf(artist)
-
             // How you want the results sorted in the resulting Cursor
             val sortOrder = "$COLUMN_ARTIST DESC"
             val cursor = db.query(
-                TABLE_NAME,  // The table to query
+                TABLE_NAME,
                 columnsToReturn(),
-                selection,  // The columns for the WHERE clause
-                selectionArgs,  // The values for the WHERE clause
+                selection(),  // The columns for the WHERE clause
+                selectionArgs(artist),  // The values for the WHERE clause
                 null,  // don't group the rows
                 null,  // don't filter by row groups
-                sortOrder // The sort order
+                sortOrder
             )
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
@@ -110,6 +106,10 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             COLUMN_ARTIST,
             COLUMN_INFO
         )
+
+        private fun selection() = "$COLUMN_ARTIST = ?"
+
+        private fun selectionArgs(artist: String) = arrayOf(artist)
     }
 
     override fun onCreate(db: SQLiteDatabase) {
