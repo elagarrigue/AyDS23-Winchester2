@@ -25,7 +25,9 @@ class OtherInfoWindow : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        textPane2 = findViewById(R.id.textPane2)
+
+        initProperties()
+
         open(intent.getStringExtra("artistName"))
     }
 
@@ -103,5 +105,10 @@ class OtherInfoWindow : AppCompatActivity() {
             builder.append("</font></div></html>")
             return builder.toString()
         }
+    }
+
+
+    private fun initProperties() {
+        textPane2 = findViewById(R.id.textPane2)
     }
 }
