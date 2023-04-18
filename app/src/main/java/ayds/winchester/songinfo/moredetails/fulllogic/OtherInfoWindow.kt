@@ -18,6 +18,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
+private const val WIKIPEDIA_URL = "https://en.wikipedia.org/w/"
+private const val DEFAULT_WIKIPEDIA_IMAGE =
+    "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
+private const val WIKIPEDIA_URL_PREFIX = "https://en.wikipedia.org/?curid="
+
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPane2: TextView
     private lateinit var dataBase: DataBase
@@ -34,10 +39,8 @@ class OtherInfoWindow : AppCompatActivity() {
     fun getARtistInfo(artistName: String?) {
 
         // create
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://en.wikipedia.org/w/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+        val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
         val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
@@ -62,7 +65,7 @@ class OtherInfoWindow : AppCompatActivity() {
                         // save to DB  <o/
                         DataBase.saveArtist(dataBase, artistName, text)
                     }
-                    val urlString = "https://en.wikipedia.org/?curid=$pageid"
+                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(urlString)
@@ -72,11 +75,10 @@ class OtherInfoWindow : AppCompatActivity() {
                     e1.printStackTrace()
                 }
             }
-            val imageUrl =
-                "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
             val finalText = text
             runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
+                Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE)
+                    .into(findViewById<View>(R.id.imageView) as ImageView)
                 textPane2!!.text = Html.fromHtml(finalText)
             }
         }.start()
