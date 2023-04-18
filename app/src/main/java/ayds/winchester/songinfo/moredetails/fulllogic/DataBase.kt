@@ -13,6 +13,12 @@ import java.sql.Statement
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     companion object {
+        private const val COLUMN_ID = "id"
+        private const val COLUMN_ARTIST = "artist"
+        private const val COLUMN_INFO = "info"
+        private const val COLUMN_SOURCE = "source"
+        private const val TABLE_NAME = "artists"
+
         private lateinit var connection: Connection
         fun testDB() {
             try {
@@ -35,10 +41,10 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
         private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet? Habria que hacer un read para cada columna?
             while (rs.next()) {
-                println("id = " + rs.getInt("id"))
-                println("artist = " + rs.getString("artist"))
-                println("info = " + rs.getString("info"))
-                println("source = " + rs.getString("source"))
+                println("id = " + rs.getInt(COLUMN_ID))
+                println("artist = " + rs.getString(COLUMN_ARTIST))
+                println("info = " + rs.getString(COLUMN_INFO))
+                println("source = " + rs.getString(COLUMN_SOURCE))
             }
         }
 
@@ -58,12 +64,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
             // Create a new map of values, where column names are the keys
             val values = ContentValues()
-            values.put("artist", artist)
-            values.put("info", info)
-            values.put("source", 1)
+            values.put(COLUMN_ARTIST, artist)
+            values.put(COLUMN_INFO, info)
+            values.put(COLUMN_SOURCE, 1)
 
             // Insert the new row, returning the primary key value of the new row
-            val newRowId = db.insert("artists", null, values)
+            val newRowId = db.insert(TABLE_NAME, null, values)
         }
 
         @JvmStatic
@@ -73,19 +79,19 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             // Define a projection that specifies which columns from the database
             // you will actually use after this query.
             val projection = arrayOf(
-                "id",
-                "artist",
-                "info"
+                COLUMN_ID,
+                COLUMN_ARTIST,
+                COLUMN_INFO
             )
 
             // Filter results WHERE "title" = 'My Title'
-            val selection = "artist  = ?"
+            val selection = "COLUMN_ARTIST = ?"
             val selectionArgs = arrayOf(artist)
 
             // How you want the results sorted in the resulting Cursor
             val sortOrder = "artist DESC"
             val cursor = db.query(
-                "artists",  // The table to query
+                TABLE_NAME,  // The table to query
                 projection,  // The array of columns to return (pass null to get all)
                 selection,  // The columns for the WHERE clause
                 selectionArgs,  // The values for the WHERE clause
@@ -96,7 +102,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
-                    cursor.getColumnIndexOrThrow("info")
+                    cursor.getColumnIndexOrThrow(COLUMN_INFO)
                 )
                 items.add(info)
             }
