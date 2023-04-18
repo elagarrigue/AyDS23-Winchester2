@@ -20,6 +20,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private const val TABLE_NAME = "artists"
 
         private lateinit var connection: Connection
+
         fun testDB() {
             try {
                 val statement: Statement = createDataBaseConnection()
@@ -38,25 +39,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 }
             }
         }
-        private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
-        private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet? Habria que hacer un read para cada columna?
-            while (rs.next()) {
-                println("$COLUMN_ID = " + rs.getInt(COLUMN_ID))
-                println("$COLUMN_ARTIST = " + rs.getString(COLUMN_ARTIST))
-                println("$COLUMN_INFO = " + rs.getString(COLUMN_INFO))
-                println("$COLUMN_SOURCE = " + rs.getString(COLUMN_SOURCE))
-            }
-        }
-
-        private fun createDataBaseConnection(): Statement {
-            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
-            val statement: Statement = connection.createStatement()
-            statement.queryTimeout = 30 // set timeout to 30 sec.
-            return statement
-        }
-
-        private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
-        private fun getDBInReadMode(db: DataBase) = db.readableDatabase
 
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
@@ -76,14 +58,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = getDBInReadMode(dbHelper)
 
-            // Define a projection that specifies which columns from the database
-            // you will actually use after this query.
-            val projection = arrayOf(
-                COLUMN_ID,
-                COLUMN_ARTIST,
-                COLUMN_INFO
-            )
-
             // Filter results WHERE "title" = 'My Title'
             val selection = "$COLUMN_ARTIST = ?"
             val selectionArgs = arrayOf(artist)
@@ -92,7 +66,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             val sortOrder = "$COLUMN_ARTIST DESC"
             val cursor = db.query(
                 TABLE_NAME,  // The table to query
-                projection,  // The array of columns to return (pass null to get all)
+                columnsToReturn(),
                 selection,  // The columns for the WHERE clause
                 selectionArgs,  // The values for the WHERE clause
                 null,  // don't group the rows
@@ -109,7 +83,35 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             cursor.close()
             return if (items.isEmpty()) null else items[0]
         }
+
+        private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
+        private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet? Habria que hacer un read para cada columna?
+            while (rs.next()) {
+                println("$COLUMN_ID = " + rs.getInt(COLUMN_ID))
+                println("$COLUMN_ARTIST = " + rs.getString(COLUMN_ARTIST))
+                println("$COLUMN_INFO = " + rs.getString(COLUMN_INFO))
+                println("$COLUMN_SOURCE = " + rs.getString(COLUMN_SOURCE))
+            }
+        }
+
+        private fun createDataBaseConnection(): Statement {
+            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
+            val statement: Statement = connection.createStatement()
+            statement.queryTimeout = 30 // set timeout to 30 sec.
+            return statement
+        }
+
+        private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
+
+        private fun getDBInReadMode(db: DataBase) = db.readableDatabase
+
+        private fun columnsToReturn() = arrayOf(
+            COLUMN_ID,
+            COLUMN_ARTIST,
+            COLUMN_INFO
+        )
     }
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
