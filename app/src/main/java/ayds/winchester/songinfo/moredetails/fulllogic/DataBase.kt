@@ -41,10 +41,10 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
         private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet? Habria que hacer un read para cada columna?
             while (rs.next()) {
-                println("id = " + rs.getInt(COLUMN_ID))
-                println("artist = " + rs.getString(COLUMN_ARTIST))
-                println("info = " + rs.getString(COLUMN_INFO))
-                println("source = " + rs.getString(COLUMN_SOURCE))
+                println("$COLUMN_ID = " + rs.getInt(COLUMN_ID))
+                println("$COLUMN_ARTIST = " + rs.getString(COLUMN_ARTIST))
+                println("$COLUMN_INFO = " + rs.getString(COLUMN_INFO))
+                println("$COLUMN_SOURCE = " + rs.getString(COLUMN_SOURCE))
             }
         }
 
@@ -85,11 +85,11 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             )
 
             // Filter results WHERE "title" = 'My Title'
-            val selection = "COLUMN_ARTIST = ?"
+            val selection = "$COLUMN_ARTIST = ?"
             val selectionArgs = arrayOf(artist)
 
             // How you want the results sorted in the resulting Cursor
-            val sortOrder = "artist DESC"
+            val sortOrder = "$COLUMN_ARTIST DESC"
             val cursor = db.query(
                 TABLE_NAME,  // The table to query
                 projection,  // The array of columns to return (pass null to get all)
