@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import java.sql.Connection
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     companion object {
@@ -41,7 +40,14 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = getDBInReadMode(dbHelper)
 
-            val cursor = db.query(
+            val cursor = createDataBaseQuery(db, artist)
+            val items = getCursorInfo(cursor)
+            cursor.close()
+            return if (items.isEmpty()) null else items[0]
+        }
+
+        private fun createDataBaseQuery(db: SQLiteDatabase, artist: String): Cursor{
+            return db.query(
                 TABLE_NAME,
                 columnsToReturn(),
                 SELECTION,  // The columns for the WHERE clause
@@ -50,9 +56,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 SORT_ORDER_CURSOR
             )
-            val items = getCursorInfo(cursor)
-            cursor.close()
-            return if (items.isEmpty()) null else items[0]
         }
 
         private fun getCursorInfo(cursor: Cursor): MutableList<String> {
