@@ -20,9 +20,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
             val db = getDBInWriteMode(dbHelper)
-
-            // Create a new map of values, where column names are the keys
-            val values = contentValues(artist, info)
+            val values = createMapOfValues(artist, info)
             insertRowInDataBase(db, values)
         }
 
@@ -30,7 +28,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             db.insert(TABLE_NAME, null, values)
         }
 
-        private fun contentValues(artist: String?, info: String?): ContentValues {
+        private fun createMapOfValues(artist: String?, info: String?): ContentValues {
             val values = ContentValues()
             values.put(COLUMN_ARTIST, artist)
             values.put(COLUMN_INFO, info)
