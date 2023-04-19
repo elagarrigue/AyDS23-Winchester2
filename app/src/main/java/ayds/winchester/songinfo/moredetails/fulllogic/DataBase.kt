@@ -6,10 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     companion object {
@@ -18,28 +14,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private const val COLUMN_INFO = "info"
         private const val COLUMN_SOURCE = "source"
         private const val TABLE_NAME = "artists"
-
-        private lateinit var connection: Connection
-
-        fun testDB() {
-            try {
-                val statement: Statement = createDataBaseConnection()
-                val rs = getResultSet(statement)
-                readResultSet(rs)
-            } catch (e: SQLException) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.message)
-            } finally {
-                try {
-                    connection?.close()
-                } catch (e: SQLException) {
-                    // connection close failed.
-                    System.err.println(e)
-                }
-            }
-        }
-
+        
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
             val db = getDBInWriteMode(dbHelper)
@@ -51,7 +26,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             values.put(COLUMN_SOURCE, 1)
 
             // Insert the new row, returning the primary key value of the new row
-            val newRowId = db.insert(TABLE_NAME, null, values)
+            db.insert(TABLE_NAME, null, values)
         }
 
         @JvmStatic
@@ -78,23 +53,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             }
             cursor.close()
             return if (items.isEmpty()) null else items[0]
-        }
-
-        private fun getResultSet(statement: Statement) = statement.executeQuery("select * from artists")
-        private fun readResultSet(rs:ResultSet){//Este metodo seria mas correcto rs.readResultSet? Habria que hacer un read para cada columna?
-            while (rs.next()) {
-                println("$COLUMN_ID = " + rs.getInt(COLUMN_ID))
-                println("$COLUMN_ARTIST = " + rs.getString(COLUMN_ARTIST))
-                println("$COLUMN_INFO = " + rs.getString(COLUMN_INFO))
-                println("$COLUMN_SOURCE = " + rs.getString(COLUMN_SOURCE))
-            }
-        }
-
-        private fun createDataBaseConnection(): Statement {
-            connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
-            val statement: Statement = connection.createStatement()
-            statement.queryTimeout = 30 // set timeout to 30 sec.
-            return statement
         }
 
         private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
