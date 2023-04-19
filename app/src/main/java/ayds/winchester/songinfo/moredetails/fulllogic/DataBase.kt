@@ -7,18 +7,20 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
+private const val COLUMN_ID = "id"
+private const val COLUMN_ARTIST = "artist"
+private const val COLUMN_INFO = "info"
+private const val COLUMN_SOURCE = "source"
+private const val TABLE_NAME = "artists"
+private const val SELECTION = "$COLUMN_ARTIST = ?"
+private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
+
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     companion object {
-        private const val COLUMN_ID = "id"
-        private const val COLUMN_ARTIST = "artist"
-        private const val COLUMN_INFO = "info"
-        private const val COLUMN_SOURCE = "source"
-        private const val TABLE_NAME = "artists"
-        private const val SELECTION = "$COLUMN_ARTIST = ?"
-        private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
+
         
         @JvmStatic
-        fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
+        fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
             val db = getDBInWriteMode(dbHelper)
             val values = createMapOfValues(artist, info)
             insertRowInDataBase(db, values)
@@ -37,7 +39,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             db.insert(TABLE_NAME, null, values)
         }
 
-        private fun createMapOfValues(artist: String?, info: String?): ContentValues {
+        private fun createMapOfValues(artist: String, info: String): ContentValues {
             val values = ContentValues()
             values.put(COLUMN_ARTIST, artist)
             values.put(COLUMN_INFO, info)
@@ -66,7 +68,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             }
             return items
         }
-        
+
         private fun columnsToReturn() = arrayOf(
             COLUMN_ID,
             COLUMN_ARTIST,
