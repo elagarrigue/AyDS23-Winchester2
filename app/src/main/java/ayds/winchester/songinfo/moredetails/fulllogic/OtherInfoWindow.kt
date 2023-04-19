@@ -63,7 +63,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
 
                         // save to DB  <o/
-                        saveArtistToDB(artistName, text)
+                        saveArtistToDataBase(artistName, text)
                     }
                     val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -86,11 +86,11 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        saveArtistToDB("test", "sarasa")
+        saveArtistToDataBase("test", "sarasa")
         getArtistInfo(artist)
     }
 
-    private fun saveArtistToDB(artistName: String?, text: String?) {
+    private fun saveArtistToDataBase(artistName: String?, text: String?) {
         DataBase.saveArtist(dataBase, artistName, text)
     }
 
