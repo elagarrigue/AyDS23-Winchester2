@@ -14,6 +14,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         private const val COLUMN_INFO = "info"
         private const val COLUMN_SOURCE = "source"
         private const val TABLE_NAME = "artists"
+        private const val SELECTION = "$COLUMN_ARTIST = ?"
         
         @JvmStatic
         fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
@@ -38,7 +39,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             val cursor = db.query(
                 TABLE_NAME,
                 columnsToReturn(),
-                selection(),  // The columns for the WHERE clause
+                SELECTION,  // The columns for the WHERE clause
                 selectionArgs(artist),  // The values for the WHERE clause
                 null,  // don't group the rows
                 null,  // don't filter by row groups
@@ -64,8 +65,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             COLUMN_ARTIST,
             COLUMN_INFO
         )
-
-        private fun selection() = "$COLUMN_ARTIST = ?"
 
         private fun selectionArgs(artist: String) = arrayOf(artist)
     }
