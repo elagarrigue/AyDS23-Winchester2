@@ -39,9 +39,7 @@ class OtherInfoWindow : AppCompatActivity() {
     fun getArtistInfo(artistName: String?) {
 
         // create
-        val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
-            .addConverterFactory(ScalarsConverterFactory.create()).build()
-        val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
+        val wikipediaAPI = createWikipediaAPI()
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
             if (text != null) { // exists in db
@@ -90,10 +88,6 @@ class OtherInfoWindow : AppCompatActivity() {
         getArtistInfo(artist)
     }
 
-    private fun saveArtistToDataBase(artistName: String?, text: String?) {
-        DataBase.saveArtist(dataBase, artistName, text)
-    }
-
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
         fun textToHtml(text: String, term: String?): String {
@@ -113,8 +107,17 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-
     private fun initProperties() {
         textPane2 = findViewById(R.id.textPane2)
+    }
+
+    private fun createWikipediaAPI(): WikipediaAPI {
+        val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+        return retrofit.create(WikipediaAPI::class.java)
+    }
+
+    private fun saveArtistToDataBase(artistName: String?, text: String) {
+        DataBase.saveArtist(dataBase, artistName, text)
     }
 }
