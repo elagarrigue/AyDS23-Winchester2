@@ -24,6 +24,15 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             insertRowInDataBase(db, values)
         }
 
+        @JvmStatic
+        fun getInfo(dbHelper: DataBase, artist: String): String? {
+            val db = getDBInReadMode(dbHelper)
+            val cursor = createDataBaseQuery(db, artist)
+            val items = getCursorInfo(cursor)
+            cursor.close()
+            return if (items.isEmpty()) null else items[0]
+        }
+
         private fun insertRowInDataBase(db: SQLiteDatabase, values: ContentValues) {
             db.insert(TABLE_NAME, null, values)
         }
@@ -34,15 +43,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             values.put(COLUMN_INFO, info)
             values.put(COLUMN_SOURCE, 1)
             return values
-        }
-
-        @JvmStatic
-        fun getInfo(dbHelper: DataBase, artist: String): String? {
-            val db = getDBInReadMode(dbHelper)
-            val cursor = createDataBaseQuery(db, artist)
-            val items = getCursorInfo(cursor)
-            cursor.close()
-            return if (items.isEmpty()) null else items[0]
         }
 
         private fun createDataBaseQuery(db: SQLiteDatabase, artist: String) =
@@ -66,11 +66,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             }
             return items
         }
-
-        private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
-
-        private fun getDBInReadMode(db: DataBase) = db.readableDatabase
-
+        
         private fun columnsToReturn() = arrayOf(
             COLUMN_ID,
             COLUMN_ARTIST,
@@ -79,6 +75,9 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
         private fun selectionArgs(artist: String) = arrayOf(artist)
 
+        private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
+
+        private fun getDBInReadMode(db: DataBase) = db.readableDatabase
     }
 
     override fun onCreate(db: SQLiteDatabase) {
