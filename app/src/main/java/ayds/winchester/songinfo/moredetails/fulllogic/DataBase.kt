@@ -39,15 +39,14 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         @JvmStatic
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = getDBInReadMode(dbHelper)
-
             val cursor = createDataBaseQuery(db, artist)
             val items = getCursorInfo(cursor)
             cursor.close()
             return if (items.isEmpty()) null else items[0]
         }
 
-        private fun createDataBaseQuery(db: SQLiteDatabase, artist: String): Cursor{
-            return db.query(
+        private fun createDataBaseQuery(db: SQLiteDatabase, artist: String) =
+            db.query(
                 TABLE_NAME,
                 columnsToReturn(),
                 SELECTION,  // The columns for the WHERE clause
@@ -56,8 +55,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 SORT_ORDER_CURSOR
             )
-        }
-
+        
         private fun getCursorInfo(cursor: Cursor): MutableList<String> {
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
