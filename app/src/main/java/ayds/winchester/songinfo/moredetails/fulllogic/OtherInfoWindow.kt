@@ -36,7 +36,7 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getARtistInfo(artistName: String?) {
+    fun getArtistInfo(artistName: String?) {
 
         // create
         val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
@@ -63,7 +63,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
 
                         // save to DB  <o/
-                        DataBase.saveArtist(dataBase, artistName, text)
+                        saveArtistToDB(artistName, text)
                     }
                     val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
                     findViewById<View>(R.id.openUrlButton).setOnClickListener {
@@ -86,8 +86,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
-        getARtistInfo(artist)
+        saveArtistToDB("test", "sarasa")
+        getArtistInfo(artist)
+    }
+
+    private fun saveArtistToDB(artistName: String?, text: String?) {
+        DataBase.saveArtist(dataBase, artistName, text)
     }
 
     companion object {
