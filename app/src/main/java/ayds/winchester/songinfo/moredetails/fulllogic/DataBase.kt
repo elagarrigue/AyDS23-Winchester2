@@ -2,6 +2,7 @@ package ayds.winchester.songinfo.moredetails.fulllogic
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -49,6 +50,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 SORT_ORDER_CURSOR
             )
+            val items = getCursorInfo(cursor)
+            cursor.close()
+            return if (items.isEmpty()) null else items[0]
+        }
+
+        private fun getCursorInfo(cursor: Cursor): MutableList<String> {
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
@@ -56,8 +63,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 )
                 items.add(info)
             }
-            cursor.close()
-            return if (items.isEmpty()) null else items[0]
+            return items
         }
 
         private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
@@ -71,6 +77,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         )
 
         private fun selectionArgs(artist: String) = arrayOf(artist)
+
     }
 
     override fun onCreate(db: SQLiteDatabase) {
