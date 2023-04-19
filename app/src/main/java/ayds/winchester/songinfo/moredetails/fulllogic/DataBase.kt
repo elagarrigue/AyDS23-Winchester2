@@ -23,8 +23,10 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
             // Create a new map of values, where column names are the keys
             val values = contentValues(artist, info)
+            insertRowInDataBase(db, values)
+        }
 
-            // Insert the new row, returning the primary key value of the new row
+        private fun insertRowInDataBase(db: SQLiteDatabase, values: ContentValues) {
             db.insert(TABLE_NAME, null, values)
         }
 
@@ -55,7 +57,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 SORT_ORDER_CURSOR
             )
-        
+
         private fun getCursorInfo(cursor: Cursor): MutableList<String> {
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
