@@ -45,13 +45,11 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String?) {
 
-        // create
         val wikipediaAPI = createWikipediaAPI()
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
-            if (existsInLocalDataBase(text)) // exists in db
-                text = markArtistAsLocal(text)
-            else { // get from service
+            if (existsInLocalDataBase(text)) text = markArtistAsLocal(text)
+            else {
                 val callResponse: Response<String>
                 try {
                     callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
@@ -65,9 +63,6 @@ class OtherInfoWindow : AppCompatActivity() {
                     } else {
                         text = snippet.asString.replace("\\n", "\n")
                         text = textToHtml(text, artistName)
-
-
-                        // save to DB  <o/
                         saveArtistToDataBase(artistName, text)
                     }
                     val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
