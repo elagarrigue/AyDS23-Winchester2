@@ -45,19 +45,16 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String?) {
 
-        val wikipediaAPI = createWikipediaAPI()
         Thread {
-            var text = DataBase.getInfo(dataBase, artistName)
-            if (existsInLocalDataBase(text)) text = markArtistAsLocal(text)
+            var text = getInfoFromLocalDataBase(artistName)
+            if (existsInLocalDataBase(text))
+                text = markArtistAsLocal(text)
             else {
-                val callResponse: Response<String>
                 try {
-                    callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
-                    val gson = Gson()
-                    val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-                    val query = jobj["query"].asJsonObject
-                    val snippet = query["search"].asJsonArray[0].asJsonObject["snippet"]
-                    val pageid = query["search"].asJsonArray[0].asJsonObject["pageid"]
+                    val artistInfoFromService = getInfoFromService(artistName)
+
+                    val snippet = artistInfoFromService.getSnippet()
+                    val pageID = artistInfoFromService.getPageID()
                     if (snippet == null) {
                         text = "No Results"
                     } else {
@@ -65,7 +62,7 @@ class OtherInfoWindow : AppCompatActivity() {
                         text = textToHtml(text, artistName)
                         saveArtistToDataBase(artistName, text)
                     }
-                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
+                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageID"
                     openUrlButton.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(urlString)
@@ -82,6 +79,20 @@ class OtherInfoWindow : AppCompatActivity() {
             }
         }.start()
     }
+
+    private fun getInfoFromService(artistName: String?): JsonObject {
+        val wikipediaAPI = createWikipediaAPI()
+        val callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
+        val gson = Gson()
+        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+        return jobj["query"].asJsonObject
+    }
+
+    private fun JsonObject.getSnippet() = this["search"].asJsonArray[0].asJsonObject["snippet"]
+
+    private fun JsonObject.getPageID() = this["search"].asJsonArray[0].asJsonObject["pageid"]
+
+    private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
 
     private fun markArtistAsLocal(artist: String) = "[*]$artist"
 
