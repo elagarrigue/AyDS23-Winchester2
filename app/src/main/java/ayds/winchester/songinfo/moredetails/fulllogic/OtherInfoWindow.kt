@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +25,8 @@ private const val WIKIPEDIA_URL_PREFIX = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPane2: TextView
+    private lateinit var openUrlButton: Button
+    private lateinit var imageView: ImageView
     private lateinit var dataBase: DataBase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,19 +34,24 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
 
         initProperties()
+        initDataBaseConnection()
 
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getArtistInfo(artistName: String?) {
+    private fun initDataBaseConnection() {
+        dataBase = DataBase(this)
+    }
+
+    private fun getArtistInfo(artistName: String?) {
 
         // create
         val wikipediaAPI = createWikipediaAPI()
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
-            if (text != null) { // exists in db
-                text = "[*]$text"
-            } else { // get from service
+            if (existsInLocalDataBase(text)) // exists in db
+                text = markArtistAsLocal(text)
+            else { // get from service
                 val callResponse: Response<String>
                 try {
                     callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
@@ -64,7 +71,7 @@ class OtherInfoWindow : AppCompatActivity() {
                         saveArtistToDataBase(artistName, text)
                     }
                     val urlString = "$WIKIPEDIA_URL_PREFIX$pageid"
-                    findViewById<View>(R.id.openUrlButton).setOnClickListener {
+                    openUrlButton.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(urlString)
                         startActivity(intent)
@@ -75,16 +82,15 @@ class OtherInfoWindow : AppCompatActivity() {
             }
             val finalText = text
             runOnUiThread {
-                Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE)
-                    .into(findViewById<View>(R.id.imageView) as ImageView)
+                Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
                 textPane2!!.text = Html.fromHtml(finalText)
             }
         }.start()
     }
 
+    private fun markArtistAsLocal(artist: String) = "[*]$artist"
+
     private fun open(artist: String?) {
-        dataBase = DataBase(this)
-        saveArtistToDataBase("test", "sarasa")
         getArtistInfo(artist)
     }
 
@@ -109,6 +115,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun initProperties() {
         textPane2 = findViewById(R.id.textPane2)
+        openUrlButton = findViewById(R.id.openUrlButton)
+        imageView = findViewById(R.id.imageView)
     }
 
     private fun createWikipediaAPI(): WikipediaAPI {
@@ -120,4 +128,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun saveArtistToDataBase(artistName: String?, text: String) {
         DataBase.saveArtist(dataBase, artistName, text)
     }
+
+    private fun existsInLocalDataBase(text: String?) = (text != null)
 }
