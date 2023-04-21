@@ -46,7 +46,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
 
         Thread {
-            var text = getInfoFromLocalDataBase(artistName)
+            var text = getInfoFromLocalDataBase(artistName) // TODO Recibir PageID y Snippet (text)
             if (existsInLocalDataBase(text))
                 text = markArtistAsLocal(text)
             else {
@@ -56,13 +56,13 @@ class OtherInfoWindow : AppCompatActivity() {
                     val snippet = artistInfoFromService.getSnippet()
                     val pageID = artistInfoFromService.getPageID()
                     if (snippet == null) {
-                        text = "No Results"
-                    } else {
+                        text = "No Results" //TODO Constants
+                    } else {    //TODO Mejor nivel de Abstracción
                         text = snippet.asString.replace("\\n", "\n")
                         text = textToHtml(text, artistName)
                         saveArtistToDataBase(artistName, text)
                     }
-                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageID"
+                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageID" // TODO sacarlo del else
                     openUrlButton.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.data = Uri.parse(urlString)
@@ -73,6 +73,7 @@ class OtherInfoWindow : AppCompatActivity() {
                 }
             }
             val finalText = text
+            // TODO Refactor
             runOnUiThread {
                 Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
                 textPane2!!.text = Html.fromHtml(finalText)
@@ -80,7 +81,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun getInfoFromService(artistName: String?): JsonObject {
+    private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
         val wikipediaAPI = createWikipediaAPI()
         val callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
@@ -100,7 +101,7 @@ class OtherInfoWindow : AppCompatActivity() {
         getArtistInfo(artist)
     }
 
-    companion object {
+    companion object { // TODO Refactor
         const val ARTIST_NAME_EXTRA = "artistName"
         fun textToHtml(text: String, term: String?): String {
             val builder = StringBuilder()
