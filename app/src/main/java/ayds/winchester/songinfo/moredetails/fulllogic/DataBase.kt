@@ -16,14 +16,16 @@ private const val SELECTION = "$COLUMN_ARTIST = ?"
 private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
+
+    private val databaseInWriteMode = this.writableDatabase
+    private val databaseInReadMode = this.readableDatabase
+
     fun saveArtist(artist: String, info: String) {
-        val db = getDBInWriteMode(this)
         val values = createMapOfValues(artist, info)
-        insertRowInDataBase(db, values)
+        insertRowInDataBase(databaseInWriteMode, values)
     }
     fun getInfo(artist: String): String? {
-        val db = getDBInReadMode(this)
-        val cursor = createDataBaseQuery(db, artist)
+        val cursor = createDataBaseQuery(databaseInReadMode, artist)
         val items = getCursorInfo(cursor)
         cursor.close()
         return if (items.isEmpty()) null else items[0]
@@ -70,10 +72,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     )
 
     private fun selectionArgs(artist: String) = arrayOf(artist)
-
-    private fun getDBInWriteMode(db: DataBase) = db.writableDatabase
-
-    private fun getDBInReadMode(db: DataBase) = db.readableDatabase
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
