@@ -22,17 +22,17 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
 
     fun saveArtist(artist: String, info: String) {
         val values = createMapOfValues(artist, info)
-        insertRowInDataBase(databaseInWriteMode, values)
+        insertRowInDataBase(values)
     }
     fun getInfo(artist: String): String? {
-        val cursor = createDataBaseQuery(databaseInReadMode, artist)
+        val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
         return if (items.isEmpty()) null else items[0]
     }
 
-    private fun insertRowInDataBase(db: SQLiteDatabase, values: ContentValues) {
-        db.insert(TABLE_NAME, null, values)
+    private fun insertRowInDataBase(values: ContentValues) {
+        databaseInWriteMode.insert(TABLE_NAME, null, values)
     }
 
     private fun createMapOfValues(artist: String, info: String): ContentValues {
@@ -43,8 +43,8 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         return values
     }
 
-    private fun createDataBaseQuery(db: SQLiteDatabase, artist: String) =
-        db.query(
+    private fun createDataBaseQuery(artist: String) =
+        databaseInReadMode.query(
             TABLE_NAME,
             columnsToReturn(),
             SELECTION,  // The columns for the WHERE clause
