@@ -12,7 +12,7 @@ private const val COLUMN_ARTIST = "artist"
 private const val COLUMN_INFO = "info"
 private const val COLUMN_SOURCE = "source"
 private const val TABLE_NAME = "artists"
-private const val SELECTION = "$COLUMN_ARTIST = ?"
+private const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
@@ -47,8 +47,8 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         databaseInReadMode.query(
             TABLE_NAME,
             columnsToReturn(),
-            SELECTION,  // The columns for the WHERE clause
-            selectionArgs(artist),  // The values for the WHERE clause
+            COLUMNS_FOR_WHERE,
+            valuesForWhere(artist),
             null,  // don't group the rows
             null,  // don't filter by row groups
             SORT_ORDER_CURSOR
@@ -71,7 +71,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         COLUMN_INFO
     )
 
-    private fun selectionArgs(artist: String) = arrayOf(artist)
+    private fun valuesForWhere(artist: String) = arrayOf(artist)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
