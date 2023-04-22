@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
@@ -22,6 +22,7 @@ private const val WIKIPEDIA_URL = "https://en.wikipedia.org/w/"
 private const val DEFAULT_WIKIPEDIA_IMAGE =
     "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
 private const val WIKIPEDIA_URL_PREFIX = "https://en.wikipedia.org/?curid="
+private const val NO_RESULTS = "No Results"
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPane2: TextView
@@ -46,20 +47,18 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
 
         Thread {
-            var text = getInfoFromLocalDataBase(artistName) // TODO Recibir PageID y Snippet (text)
+            var text = getInfoFromLocalDataBase(artistName) // TODO Recibir PageID y Snippet (text) --> NO ARREGLAR
             if (existsInLocalDataBase(text))
                 text = markArtistAsLocal(text)
             else {
                 try {
                     val artistInfoFromService = getInfoFromService(artistName)
-
                     val snippet = artistInfoFromService.getSnippet()
                     val pageID = artistInfoFromService.getPageID()
                     if (snippet == null) {
-                        text = "No Results" //TODO Constants
-                    } else {    //TODO Mejor nivel de Abstracción
-                        text = snippet.asString.replace("\\n", "\n")
-                        text = textToHtml(text, artistName)
+                        text = NO_RESULTS
+                    } else {
+                        text = reformatToHtml(snippet, artistName)
                         saveArtistToDataBase(artistName, text)
                     }
                     val urlString = "$WIKIPEDIA_URL_PREFIX$pageID" // TODO sacarlo del else
@@ -81,6 +80,11 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
+    private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
+        var text1 = snippet.asString.replace("\\n", "\n")
+        return textToHtml(text1, artistName)
+    }
+
     private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
         val wikipediaAPI = createWikipediaAPI()
         val callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
@@ -95,7 +99,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
 
-    private fun markArtistAsLocal(artist: String) = "[*]$artist"
+    private fun markArtistAsLocal(artist: String) = "[*]$artist" //TODO ¿Esta bien que sea artist el parametro? No deberia ser text? Pq nunca se nombra artist en more details
 
     private fun open(artist: String?) {
         getArtistInfo(artist)
