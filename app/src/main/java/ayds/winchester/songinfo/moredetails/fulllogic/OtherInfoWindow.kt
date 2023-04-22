@@ -61,7 +61,7 @@ class OtherInfoWindow : AppCompatActivity() {
                         text = reformatToHtml(snippet, artistName)
                         saveArtistToDataBase(artistName, text)
                     }
-                    val urlString = generateUrlString(pageID) // TODO No se saca del else ya que no hay que arreglar nada, se refactorizo
+                    val urlString = generateUrlString(pageID) // TODO (Rama) No se saca del else ya que no hay que arreglar nada, se refactorizo
                     setUrlToOpenButton(urlString)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
@@ -76,7 +76,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun setUrlToOpenButton(urlString: String) {
+    private fun setUrlToOpenButton(urlString: String) { //TODO (Rama) - Nombre correcto?
         openUrlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(urlString)
@@ -107,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
 
-    private fun markArtistAsLocal(artist: String) = "[*]$artist" //TODO ¿Esta bien que sea artist el parametro? No deberia ser text? Pq nunca se nombra artist en more details
+    private fun markArtistAsLocal(artist: String) = "[*]$artist" //TODO (Rama) ¿Esta bien que sea artist el parametro? No deberia ser text? Pq nunca se nombra artist en more details
 
     private fun open(artist: String?) {
         getArtistInfo(artist)
