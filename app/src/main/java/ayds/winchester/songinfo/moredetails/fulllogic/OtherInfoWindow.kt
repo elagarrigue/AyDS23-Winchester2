@@ -61,12 +61,8 @@ class OtherInfoWindow : AppCompatActivity() {
                         text = reformatToHtml(snippet, artistName)
                         saveArtistToDataBase(artistName, text)
                     }
-                    val urlString = "$WIKIPEDIA_URL_PREFIX$pageID" // TODO sacarlo del else
-                    openUrlButton.setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlString)
-                        startActivity(intent)
-                    }
+                    val urlString = generateUrlString(pageID) // TODO No se saca del else ya que no hay que arreglar nada, se refactorizo
+                    setUrlToOpenButton(urlString)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
                 }
@@ -80,9 +76,21 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
+    private fun setUrlToOpenButton(urlString: String) {
+        openUrlButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(urlString)
+            startActivity(intent)
+        }
+    }
+
     private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
         var text1 = snippet.asString.replace("\\n", "\n")
         return textToHtml(text1, artistName)
+    }
+
+    private fun generateUrlString(pageID: JsonElement): String{
+        return "$WIKIPEDIA_URL_PREFIX$pageID"
     }
 
     private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
