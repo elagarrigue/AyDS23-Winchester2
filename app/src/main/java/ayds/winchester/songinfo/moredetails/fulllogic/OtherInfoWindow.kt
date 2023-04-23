@@ -47,27 +47,27 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
 
         Thread {
-            var text = getInfoFromLocalDataBase(artistName) // TODO Recibir PageID y Snippet (text) --> NO ARREGLAR
-            if (existsInLocalDataBase(text))
-                text = markArtistAsLocal(text)
+            var artistInfo = getInfoFromLocalDataBase(artistName)
+            if (existsInLocalDataBase(artistInfo))
+                artistInfo = markArtistInfoAsLocal(artistInfo)
             else {
                 try {
                     val artistInfoFromService = getInfoFromService(artistName)
-                    val snippet = artistInfoFromService.getSnippet()
-                    val pageID = artistInfoFromService.getPageID()
-                    if (snippet == null) {
-                        text = NO_RESULTS
+                    val artistSnippet = artistInfoFromService.getSnippet()
+                    val artistPageID = artistInfoFromService.getPageID()
+                    if (artistSnippet == null) {
+                        artistInfo = NO_RESULTS
                     } else {
-                        text = reformatToHtml(snippet, artistName)
-                        saveArtistToDataBase(artistName, text)
+                        artistInfo = reformatToHtml(artistSnippet, artistName)
+                        saveArtistToDataBase(artistName, artistInfo)
                     }
-                    val urlString = generateUrlString(pageID) // TODO (Rama) No se saca del else ya que no hay que arreglar nada, se refactorizo
-                    setUrlToOpenButton(urlString)
+                    val urlString = generateUrlString(artistPageID)
+                    setOpenURLButtonListener(urlString)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
                 }
             }
-            val finalText = text
+            val finalText = artistInfo
             // TODO Refactor
             runOnUiThread {
                 Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
@@ -76,7 +76,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun setUrlToOpenButton(urlString: String) { //TODO (Rama) - Nombre correcto?
+    private fun setOpenURLButtonListener(urlString: String) {
         openUrlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(urlString)
@@ -94,7 +94,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
-        val wikipediaAPI = createWikipediaAPI()
+        val wikipediaAPI = createWikipediaAPIConnection()
         val callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
         val gson = Gson()
         val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
@@ -107,7 +107,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
 
-    private fun markArtistAsLocal(artist: String) = "[*]$artist" //TODO (Rama) ¿Esta bien que sea artist el parametro? No deberia ser text? Pq nunca se nombra artist en more details
+    private fun markArtistInfoAsLocal(artistInfo: String) = "[*]$artistInfo"
 
     private fun open(artist: String?) {
         getArtistInfo(artist)
@@ -138,7 +138,7 @@ class OtherInfoWindow : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
     }
 
-    private fun createWikipediaAPI(): WikipediaAPI {
+    private fun createWikipediaAPIConnection(): WikipediaAPI {
         val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
             .addConverterFactory(ScalarsConverterFactory.create()).build()
         return retrofit.create(WikipediaAPI::class.java)
