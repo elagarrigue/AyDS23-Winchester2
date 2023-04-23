@@ -40,8 +40,18 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
+    private fun initProperties() {
+        textPane2 = findViewById(R.id.textPane2)
+        openUrlButton = findViewById(R.id.openUrlButton)
+        imageView = findViewById(R.id.imageView)
+    }
+
     private fun initDataBaseConnection() {
         dataBase = DataBase(this)
+    }
+
+    private fun open(artist: String?) {
+        getArtistInfo(artist)
     }
 
     private fun getArtistInfo(artistName: String?) {
@@ -54,15 +64,14 @@ class OtherInfoWindow : AppCompatActivity() {
                 try {
                     val artistInfoFromService = getInfoFromService(artistName)
                     val artistSnippet = artistInfoFromService.getSnippet()
-                    val artistPageID = artistInfoFromService.getPageID()
+                    val artistURL = artistInfoFromService.getURL()
                     if (artistSnippet == null) {
                         artistInfo = NO_RESULTS
                     } else {
                         artistInfo = reformatToHtml(artistSnippet, artistName)
                         saveArtistToDataBase(artistName, artistInfo)
                     }
-                    val urlString = generateUrlString(artistPageID)
-                    setOpenURLButtonListener(urlString)
+                    setOpenURLButtonListener(artistURL)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
                 }
@@ -76,22 +85,11 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun setOpenURLButtonListener(urlString: String) {
-        openUrlButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
-            startActivity(intent)
-        }
-    }
+    private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
 
-    private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
-        var text1 = snippet.asString.replace("\\n", "\n")
-        return textToHtml(text1, artistName)
-    }
+    private fun existsInLocalDataBase(text: String?) = (text != null)
 
-    private fun generateUrlString(pageID: JsonElement): String{
-        return "$WIKIPEDIA_URL_PREFIX$pageID"
-    }
+    private fun markArtistInfoAsLocal(artistInfo: String) = "[*]$artistInfo"
 
     private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
         val wikipediaAPI = createWikipediaAPIConnection()
@@ -101,16 +99,33 @@ class OtherInfoWindow : AppCompatActivity() {
         return jobj["query"].asJsonObject
     }
 
+    private fun createWikipediaAPIConnection(): WikipediaAPI {
+        val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+        return retrofit.create(WikipediaAPI::class.java)
+    }
+
     private fun JsonObject.getSnippet() = this["search"].asJsonArray[0].asJsonObject["snippet"]
+
+    private fun JsonObject.getURL() = "$WIKIPEDIA_URL${this.getPageID()}"
 
     private fun JsonObject.getPageID() = this["search"].asJsonArray[0].asJsonObject["pageid"]
 
-    private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
+    private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
+        var text1 = snippet.asString.replace("\\n", "\n")
+        return textToHtml(text1, artistName)
+    }
 
-    private fun markArtistInfoAsLocal(artistInfo: String) = "[*]$artistInfo"
+    private fun setOpenURLButtonListener(urlString: String) {
+        openUrlButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(urlString)
+            startActivity(intent)
+        }
+    }
 
-    private fun open(artist: String?) {
-        getArtistInfo(artist)
+    private fun generateUrlString(pageID: JsonElement): String{
+        return "$WIKIPEDIA_URL_PREFIX$pageID"
     }
 
     companion object { // TODO Refactor
@@ -132,21 +147,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun initProperties() {
-        textPane2 = findViewById(R.id.textPane2)
-        openUrlButton = findViewById(R.id.openUrlButton)
-        imageView = findViewById(R.id.imageView)
-    }
-
-    private fun createWikipediaAPIConnection(): WikipediaAPI {
-        val retrofit = Retrofit.Builder().baseUrl(WIKIPEDIA_URL)
-            .addConverterFactory(ScalarsConverterFactory.create()).build()
-        return retrofit.create(WikipediaAPI::class.java)
-    }
-
     private fun saveArtistToDataBase(artistName: String?, text: String) {
         DataBase.saveArtist(dataBase, artistName, text)
     }
-
-    private fun existsInLocalDataBase(text: String?) = (text != null)
 }
