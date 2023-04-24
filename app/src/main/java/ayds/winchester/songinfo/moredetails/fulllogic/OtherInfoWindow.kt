@@ -35,9 +35,9 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
 
         initProperties()
-        initDataBaseConnection()
+        initLocalDataBaseConnection()
 
-        open(intent.getStringExtra("artistName"))
+        getArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
     private fun initProperties() {
@@ -46,12 +46,8 @@ class OtherInfoWindow : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
     }
 
-    private fun initDataBaseConnection() {
+    private fun initLocalDataBaseConnection() {
         dataBase = DataBase(this)
-    }
-
-    private fun open(artist: String?) {
-        getArtistInfo(artist)
     }
 
     private fun getArtistInfo(artistName: String?) {
@@ -61,42 +57,31 @@ class OtherInfoWindow : AppCompatActivity() {
             if (existsInLocalDataBase(artistInfo))
                 artistInfo = markArtistInfoAsLocal(artistInfo)
             else {
-                try {
-                    val artistInfoFromService = getInfoFromService(artistName)
-                    val artistSnippet = artistInfoFromService.getSnippet()
-                    val artistURL = artistInfoFromService.getURL()
-                    if (artistSnippet == null) {
-                        artistInfo = NO_RESULTS
-                    } else {
-                        artistInfo = reformatToHtml(artistSnippet, artistName)
-                        saveArtistToDataBase(artistName, artistInfo)
-                    }
-                    setOpenURLButtonListener(artistURL)
-                } catch (e1: IOException) {
-                    e1.printStackTrace()
+                val artistInfoFromService = getInfoFromService(artistName)
+                val artistSnippet = artistInfoFromService.getSnippet()
+                val artistURL = artistInfoFromService.getURL()
+                if (existsArtistSnippet(artistSnippet)) {
+                    artistInfo = NO_RESULTS
+                } else {
+                    artistInfo = reformatToHtml(artistSnippet, artistName)
+                    saveArtistToDataBase(artistName, artistInfo)
                 }
+                setOpenURLButtonListener(artistURL)
             }
-            val finalText = artistInfo
-            // TODO Refactor
-            runOnUiThread {
-                Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
-                textPane2!!.text = Html.fromHtml(finalText)
-            }
+            displayArtistInfo(artistInfo)
         }.start()
     }
 
-    private fun getInfoFromLocalDataBase(artistName: String?) = DataBase.getInfo(dataBase, artistName)
+    private fun getInfoFromLocalDataBase(artistName: String?) =
+        DataBase.getInfo(dataBase, artistName)
 
     private fun existsInLocalDataBase(text: String?) = (text != null)
 
     private fun markArtistInfoAsLocal(artistInfo: String) = "[*]$artistInfo"
 
-    private fun getInfoFromService(artistName: String?): JsonObject { //TODO Mejor nivel de abstraccion
+    private fun getInfoFromService(artistName: String?): JsonObject {
         val wikipediaAPI = createWikipediaAPIConnection()
-        val callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
-        val gson = Gson()
-        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-        return jobj["query"].asJsonObject
+        return wikipediaAPI.getArtistInfoFromQuery(artistName)
     }
 
     private fun createWikipediaAPIConnection(): WikipediaAPI {
@@ -105,14 +90,22 @@ class OtherInfoWindow : AppCompatActivity() {
         return retrofit.create(WikipediaAPI::class.java)
     }
 
+    private fun WikipediaAPI.getArtistInfoFromQuery(artistName: String?): JsonObject {
+        val callResponse = this.getArtistInfo(artistName).execute()
+        val jsonObject = Gson().fromJson(callResponse.body(), JsonObject::class.java)
+        return jsonObject["query"].asJsonObject
+    }
+
     private fun JsonObject.getSnippet() = this["search"].asJsonArray[0].asJsonObject["snippet"]
 
-    private fun JsonObject.getURL() = "$WIKIPEDIA_URL${this.getPageID()}"
+    private fun JsonObject.getURL() = "$WIKIPEDIA_URL_PREFIX${this.getPageID()}"
 
     private fun JsonObject.getPageID() = this["search"].asJsonArray[0].asJsonObject["pageid"]
 
+    private fun existsArtistSnippet(artistSnippet: JsonElement?) = artistSnippet == null
+
     private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
-        var text1 = snippet.asString.replace("\\n", "\n")
+        val text1 = snippet.asString.replace("\\n", "\n")
         return textToHtml(text1, artistName)
     }
 
@@ -124,8 +117,11 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun generateUrlString(pageID: JsonElement): String{
-        return "$WIKIPEDIA_URL_PREFIX$pageID"
+    private fun displayArtistInfo(artistInfo: String?) {
+        runOnUiThread {
+            Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
+            textPane2.text = Html.fromHtml(artistInfo)
+        }
     }
 
     companion object { // TODO Refactor
