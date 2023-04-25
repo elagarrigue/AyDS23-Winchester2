@@ -14,8 +14,9 @@ private const val COLUMN_SOURCE = "source"
 private const val TABLE_NAME = "artists"
 private const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
+private const val DICTIONARY_DATABASE = "dictionary.db"
 
-class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
+class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABASE, null, 1) {
 
     private val databaseInWriteMode = this.writableDatabase
     private val databaseInReadMode = this.readableDatabase
@@ -30,7 +31,15 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         cursor.close()
         return if (items.isEmpty()) null else items[0]
     }
+    
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(
+            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
+        )
+        Log.i("DB", "DB created")
+    }
 
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     private fun insertRowInDataBase(values: ContentValues) {
         databaseInWriteMode.insert(TABLE_NAME, null, values)
     }
@@ -72,14 +81,5 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     )
 
     private fun valuesForWhere(artist: String) = arrayOf(artist)
-
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
-        )
-        Log.i("DB", "DB created")
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
 }
