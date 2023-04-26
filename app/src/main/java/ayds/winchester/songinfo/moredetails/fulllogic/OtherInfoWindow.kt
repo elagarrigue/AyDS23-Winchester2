@@ -64,7 +64,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }.start()
     }
 
-    private fun getArtistInfo(artistName:String?):String?{
+    private fun getArtistInfo(artistName:String?):String{
         var artistInfo = getInfoFromLocalDataBase(artistName)
         artistInfo = if (existsInLocalDataBase(artistInfo)) formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
         return artistInfo
@@ -89,7 +89,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getInfoFromLocalDataBase(artistName: String?) =
-        dataBase.getInfo(artistName)
+        dataBase.getArtistInfo(artistName)
 
     private fun existsInLocalDataBase(text: String?) = (text != null)
 
