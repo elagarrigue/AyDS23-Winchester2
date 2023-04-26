@@ -15,17 +15,17 @@ private const val TABLE_NAME = "artists"
 private const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 private const val DICTIONARY_DATABASE = "dictionary.db"
-private const val SQL_CREATE_TABLE = "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
+private const val SQL_CREATE_TABLE = "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_ARTIST, $COLUMN_INFO, $COLUMN_SOURCE)"
+private const val VERSION = 1
+private const val VALUE_SOURCE = 1
 
-class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABASE, null, 1) {
-
-    private val databaseInWriteMode = this.writableDatabase
-    private val databaseInReadMode = this.readableDatabase
+class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABASE, null, VERSION) {
 
     fun saveArtist(artist: String?, info: String) {
         val values = createMapOfValues(artist, info)
         insertRowInDataBase(values)
     }
+
     fun getArtistInfo(artist: String?): String? {
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
@@ -37,30 +37,29 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         db.execSQL(
             SQL_CREATE_TABLE
         )
-        Log.i("DB", "DB created")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     private fun insertRowInDataBase(values: ContentValues) {
-        databaseInWriteMode.insert(TABLE_NAME, null, values)
+        writableDatabase.insert(TABLE_NAME, null, values)
     }
 
     private fun createMapOfValues(artist: String?, info: String): ContentValues {
         val values = ContentValues()
         values.put(COLUMN_ARTIST, artist)
         values.put(COLUMN_INFO, info)
-        values.put(COLUMN_SOURCE, 1)
+        values.put(COLUMN_SOURCE, VALUE_SOURCE)
         return values
     }
 
     private fun createDataBaseQuery(artist: String?) =
-        databaseInReadMode.query(
+        readableDatabase.query(
             TABLE_NAME,
             columnsToReturn(),
             COLUMNS_FOR_WHERE,
             valuesForWhere(artist),
-            null,  // don't group the rows
-            null,  // don't filter by row groups
+            null,
+            null,
             SORT_ORDER_CURSOR
         )
 
