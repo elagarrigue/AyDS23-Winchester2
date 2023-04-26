@@ -32,10 +32,8 @@ class OtherInfoWindow : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-
         initProperties()
         initLocalDataBaseConnection()
-
         getArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
@@ -51,7 +49,10 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String?) {
 
-        Thread {
+        Thread { //TODO Solo mostrar informarcion
+            // TODO RECUPERACION
+            // TODO FORMATERO
+            // TODO PRESENTACION
             var artistInfo = getInfoFromLocalDataBase(artistName)
             if (existsInLocalDataBase(artistInfo))
                 artistInfo = markArtistInfoAsLocal(artistInfo)
@@ -128,7 +129,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>")
+        builder.append("<html><div width=400>") //TODO
         builder.append("<font face=\"arial\">")
         val textWithBold = formatTextWithBold(text, term)
         builder.append(textWithBold)
