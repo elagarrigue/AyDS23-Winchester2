@@ -64,23 +64,33 @@ class OtherInfoWindow : AppCompatActivity() {
             // TODO RECUPERACION
             // TODO FORMATERO
             // TODO PRESENTACION
-            var artistInfo = getInfoFromLocalDataBase(artistName)
-            if (existsInLocalDataBase(artistInfo))
-                artistInfo = markArtistInfoAsLocal(artistInfo)
-            else {
-                val artistInfoFromService = getInfoFromService(artistName)
-                val artistSnippet = artistInfoFromService.getSnippet()
-                val artistURL = artistInfoFromService.getURL()
-                if (existsArtistSnippet(artistSnippet)) {
-                    artistInfo = NO_RESULTS
-                } else {
-                    artistInfo = reformatToHtml(artistSnippet, artistName)
-                    saveArtistToDataBase(artistName, artistInfo)
-                }
-                setOpenURLButtonListener(artistURL)
-            }
-            displayArtistInfo(artistInfo)
+            displayArtistInfo(getInfo(artistName))
         }.start()
+    }
+
+    private fun getInfo(artistName:String?):String?{ //TODO RECUPERACION
+        var artistInfo = getInfoFromLocalDataBase(artistName)
+        if (existsInLocalDataBase(artistInfo))
+            artistInfo = markArtistInfoAsLocal(artistInfo)
+        else {
+            artistInfo = formatInfoFromService(artistName)
+        }
+        return artistInfo
+    }
+
+    private fun formatInfoFromService(artistName: String?): String {
+        var artistInfo:String
+        val artistInfoFromService = getInfoFromService(artistName)
+        val artistSnippet = artistInfoFromService.getSnippet()
+        val artistURL = artistInfoFromService.getURL()
+        if (existsArtistSnippet(artistSnippet)) {
+            artistInfo = NO_RESULTS
+        } else {
+            artistInfo = reformatToHtml(artistSnippet, artistName)
+            saveArtistToDataBase(artistName, artistInfo)
+        }
+        setOpenURLButtonListener(artistURL)
+        return artistInfo
     }
 
     private fun getInfoFromLocalDataBase(artistName: String?) =
@@ -137,7 +147,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
-        builder.append(HTML_START_WIDTH) //TODO
+        builder.append(HTML_START_WIDTH)
         builder.append(HTML_FONT)
         val textWithBold = formatTextWithBold(text, term)
         builder.append(textWithBold)
