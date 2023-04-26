@@ -15,6 +15,7 @@ private const val TABLE_NAME = "artists"
 private const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 private const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 private const val DICTIONARY_DATABASE = "dictionary.db"
+private const val SQL_CREATE_TABLE = "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABASE, null, 1) {
 
@@ -25,7 +26,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         val values = createMapOfValues(artist, info)
         insertRowInDataBase(values)
     }
-    fun getInfo(artist: String): String? {
+    fun getArtistInfo(artist: String): String? {
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
@@ -34,7 +35,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
     
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
-            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
+            SQL_CREATE_TABLE
         )
         Log.i("DB", "DB created")
     }
