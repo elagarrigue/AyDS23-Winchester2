@@ -89,11 +89,11 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getInfoFromLocalDataBase(artistName: String?) =
-        DataBase.getInfo(dataBase, artistName)
+        dataBase.getInfo(artistName)
 
     private fun existsInLocalDataBase(text: String?) = (text != null)
 
-    private fun formatInfoFromLocalDataBase(artistInfo: String) = "[*]$artistInfo"
+    private fun formatInfoFromLocalDataBase(artistInfo: String?) = "[*]$artistInfo"
 
     private fun getInfoFromService(artistName: String?): JsonObject {
         val wikipediaAPI = createWikipediaAPIConnection()
@@ -161,6 +161,6 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun saveArtistToDataBase(artistName: String?, text: String) {
-        DataBase.saveArtist(dataBase, artistName, text)
+        dataBase.saveArtist(artistName, text)
     }
 }
