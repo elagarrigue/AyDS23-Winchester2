@@ -45,7 +45,7 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
         initProperties()
         initLocalDataBaseConnection()
-        getArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
+        createThreadForInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
     private fun initProperties() {
@@ -58,38 +58,33 @@ class OtherInfoWindow : AppCompatActivity() {
         dataBase = DataBase(this)
     }
 
-    private fun getArtistInfo(artistName: String?) {
-
-        Thread { //TODO Solo mostrar informarcion
-            // TODO RECUPERACION
-            // TODO FORMATERO
-            // TODO PRESENTACION
-            displayArtistInfo(getInfo(artistName))
+    private fun createThreadForInfo(artistName: String?) {
+        Thread {
+            displayArtistInfo(getArtistInfo(artistName))
         }.start()
     }
 
-    private fun getInfo(artistName:String?):String?{ //TODO RECUPERACION
+    private fun getArtistInfo(artistName:String?):String?{
         var artistInfo = getInfoFromLocalDataBase(artistName)
-        if (existsInLocalDataBase(artistInfo))
-            artistInfo = markArtistInfoAsLocal(artistInfo)
-        else {
-            artistInfo = formatInfoFromService(artistName)
-        }
+        artistInfo = if (existsInLocalDataBase(artistInfo)) formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
         return artistInfo
     }
 
     private fun formatInfoFromService(artistName: String?): String {
-        var artistInfo:String
         val artistInfoFromService = getInfoFromService(artistName)
+        setOpenURLButtonListener(artistInfoFromService.getURL())
+        return resolveArtistInfo(artistInfoFromService, artistName)
+    }
+
+    private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): String {
+        var artistInfo:String
         val artistSnippet = artistInfoFromService.getSnippet()
-        val artistURL = artistInfoFromService.getURL()
-        if (existsArtistSnippet(artistSnippet)) {
+        if (noneArtistSnippet(artistSnippet)) {
             artistInfo = NO_RESULTS
         } else {
             artistInfo = reformatToHtml(artistSnippet, artistName)
             saveArtistToDataBase(artistName, artistInfo)
         }
-        setOpenURLButtonListener(artistURL)
         return artistInfo
     }
 
@@ -98,7 +93,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun existsInLocalDataBase(text: String?) = (text != null)
 
-    private fun markArtistInfoAsLocal(artistInfo: String) = "[*]$artistInfo"
+    private fun formatInfoFromLocalDataBase(artistInfo: String) = "[*]$artistInfo"
 
     private fun getInfoFromService(artistName: String?): JsonObject {
         val wikipediaAPI = createWikipediaAPIConnection()
@@ -123,7 +118,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun JsonObject.getPageID() = this[SEARCH].asJsonArray[0].asJsonObject[PAGE_ID]
 
-    private fun existsArtistSnippet(artistSnippet: JsonElement?) = artistSnippet == null
+    private fun noneArtistSnippet(artistSnippet: JsonElement?) = artistSnippet == null
 
     private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
         val text1 = snippet.asString.replace("\\n", "\n")
