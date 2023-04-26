@@ -22,11 +22,11 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
     private val databaseInWriteMode = this.writableDatabase
     private val databaseInReadMode = this.readableDatabase
 
-    fun saveArtist(artist: String, info: String) {
+    fun saveArtist(artist: String?, info: String) {
         val values = createMapOfValues(artist, info)
         insertRowInDataBase(values)
     }
-    fun getArtistInfo(artist: String): String? {
+    fun getArtistInfo(artist: String?): String? {
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
@@ -45,7 +45,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         databaseInWriteMode.insert(TABLE_NAME, null, values)
     }
 
-    private fun createMapOfValues(artist: String, info: String): ContentValues {
+    private fun createMapOfValues(artist: String?, info: String): ContentValues {
         val values = ContentValues()
         values.put(COLUMN_ARTIST, artist)
         values.put(COLUMN_INFO, info)
@@ -53,7 +53,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         return values
     }
 
-    private fun createDataBaseQuery(artist: String) =
+    private fun createDataBaseQuery(artist: String?) =
         databaseInReadMode.query(
             TABLE_NAME,
             columnsToReturn(),
@@ -81,6 +81,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         COLUMN_INFO
     )
 
-    private fun valuesForWhere(artist: String) = arrayOf(artist)
+    private fun valuesForWhere(artist: String?) = arrayOf(artist)
 
 }
