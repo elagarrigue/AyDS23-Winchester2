@@ -22,12 +22,23 @@ private const val DEFAULT_WIKIPEDIA_IMAGE =
     "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
 private const val WIKIPEDIA_URL_PREFIX = "https://en.wikipedia.org/?curid="
 private const val NO_RESULTS = "No Results"
+private const val HTML_START_WIDTH = "<html><div width=400>"
+private const val HTML_FONT = "<font face=\"arial\">"
+private const val HTML_END = "</font></div></html>"
+private const val QUERY = "query"
+private const val SEARCH = "search"
+private const val SNIPPET = "snippet"
+private const val PAGE_ID = "pageid"
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPane2: TextView
     private lateinit var openUrlButton: Button
     private lateinit var imageView: ImageView
     private lateinit var dataBase: DataBase
+
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,14 +104,14 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun WikipediaAPI.getArtistInfoFromQuery(artistName: String?): JsonObject {
         val callResponse = this.getArtistInfo(artistName).execute()
         val jsonObject = Gson().fromJson(callResponse.body(), JsonObject::class.java)
-        return jsonObject["query"].asJsonObject
+        return jsonObject[QUERY].asJsonObject
     }
 
-    private fun JsonObject.getSnippet() = this["search"].asJsonArray[0].asJsonObject["snippet"]
+    private fun JsonObject.getSnippet() = this[SEARCH].asJsonArray[0].asJsonObject[SNIPPET]
 
     private fun JsonObject.getURL() = "$WIKIPEDIA_URL_PREFIX${this.getPageID()}"
 
-    private fun JsonObject.getPageID() = this["search"].asJsonArray[0].asJsonObject["pageid"]
+    private fun JsonObject.getPageID() = this[SEARCH].asJsonArray[0].asJsonObject[PAGE_ID]
 
     private fun existsArtistSnippet(artistSnippet: JsonElement?) = artistSnippet == null
 
@@ -124,16 +135,13 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val ARTIST_NAME_EXTRA = "artistName"
-    }
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>") //TODO
-        builder.append("<font face=\"arial\">")
+        builder.append(HTML_START_WIDTH) //TODO
+        builder.append(HTML_FONT)
         val textWithBold = formatTextWithBold(text, term)
         builder.append(textWithBold)
-        builder.append("</font></div></html>")
+        builder.append(HTML_END)
         return builder.toString()
     }
 
