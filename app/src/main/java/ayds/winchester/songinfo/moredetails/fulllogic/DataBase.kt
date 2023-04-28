@@ -25,7 +25,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         insertRowInDataBase(values)
     }
 
-    fun getArtistInfo(artist: String?): String? {
+    fun getArtistInfo(artist: String?): String {
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
