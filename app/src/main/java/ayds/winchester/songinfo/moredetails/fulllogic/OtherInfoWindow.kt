@@ -30,7 +30,7 @@ private const val SNIPPET = "snippet"
 private const val PAGE_ID = "pageid"
 
 class OtherInfoWindow : AppCompatActivity() {
-    private lateinit var textPane2: TextView
+    private lateinit var artistInfoTextPane: TextView
     private lateinit var openUrlButton: Button
     private lateinit var imageView: ImageView
     private val dataBase = DataBase(this)
@@ -47,7 +47,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun initProperties() {
-        textPane2 = findViewById(R.id.textPane2)
+        artistInfoTextPane = findViewById(R.id.textPane2)
         openUrlButton = findViewById(R.id.openUrlButton)
         imageView = findViewById(R.id.imageView)
     }
@@ -61,13 +61,13 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun displayArtistInfo(artistInfo: String?) {
         runOnUiThread {
             Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
-            textPane2.text = Html.fromHtml(artistInfo)
+            artistInfoTextPane.text = Html.fromHtml(artistInfo)
         }
     }
 
     private fun getArtistInfo(artistName:String?):String{
         var artistInfo = getInfoFromLocalDataBase(artistName)
-        artistInfo = if (existsInLocalDataBase(artistInfo)) formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
+        artistInfo = if (artistInfo != null) formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
         return artistInfo
     }
 
@@ -78,9 +78,9 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): String {
-        var artistInfo:String
+        val artistInfo:String
         val artistSnippet = artistInfoFromService.getSnippet()
-        if (noneArtistSnippet(artistSnippet)) {
+        if (artistSnippet == null) {
             artistInfo = NO_RESULTS
         } else {
             artistInfo = reformatToHtml(artistSnippet, artistName)
@@ -91,8 +91,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getInfoFromLocalDataBase(artistName: String?) =
         dataBase.getArtistInfo(artistName)
-
-    private fun existsInLocalDataBase(text: String?) = (text != null)
 
     private fun formatInfoFromLocalDataBase(artistInfo: String?) = "[*]$artistInfo"
 
@@ -128,10 +126,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun setOpenURLButtonListener(urlString: String) {
         openUrlButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
-            startActivity(intent)
+            navigateTo(urlString)
         }
+    }
+
+    private fun navigateTo(urlString: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(urlString)
+        startActivity(intent)
     }
 
     private fun textToHtml(text: String, term: String?): String {
