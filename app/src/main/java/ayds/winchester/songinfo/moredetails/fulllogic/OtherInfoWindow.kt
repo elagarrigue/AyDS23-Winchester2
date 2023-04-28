@@ -18,8 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 
 private const val WIKIPEDIA_URL = "https://en.wikipedia.org/w/"
-private const val DEFAULT_WIKIPEDIA_IMAGE =
-    "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
+private const val DEFAULT_WIKIPEDIA_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
 private const val WIKIPEDIA_URL_PREFIX = "https://en.wikipedia.org/?curid="
 private const val NO_RESULTS = "No Results"
 private const val HTML_START_WIDTH = "<html><div width=400>"
@@ -34,7 +33,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private lateinit var textPane2: TextView
     private lateinit var openUrlButton: Button
     private lateinit var imageView: ImageView
-    private lateinit var dataBase: DataBase
+    private val dataBase = DataBase(this)
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -44,7 +43,6 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initProperties()
-        initLocalDataBaseConnection()
         createThreadForInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
@@ -54,14 +52,17 @@ class OtherInfoWindow : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
     }
 
-    private fun initLocalDataBaseConnection() {
-        dataBase = DataBase(this)
-    }
-
     private fun createThreadForInfo(artistName: String?) {
         Thread {
             displayArtistInfo(getArtistInfo(artistName))
         }.start()
+    }
+
+    private fun displayArtistInfo(artistInfo: String?) {
+        runOnUiThread {
+            Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
+            textPane2.text = Html.fromHtml(artistInfo)
+        }
     }
 
     private fun getArtistInfo(artistName:String?):String{
@@ -130,13 +131,6 @@ class OtherInfoWindow : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(urlString)
             startActivity(intent)
-        }
-    }
-
-    private fun displayArtistInfo(artistInfo: String?) {
-        runOnUiThread {
-            Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
-            textPane2.text = Html.fromHtml(artistInfo)
         }
     }
 
