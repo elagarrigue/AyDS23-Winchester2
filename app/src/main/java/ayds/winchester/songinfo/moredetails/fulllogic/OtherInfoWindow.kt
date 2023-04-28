@@ -54,7 +54,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadForInfo() {
         Thread {
-            displayArtistInfo(getArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA)))
+            displayArtistInfo(getArtistInfo())
         }.start()
     }
 
@@ -65,7 +65,8 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    private fun getArtistInfo(artistName:String?):String{
+    private fun getArtistInfo():String{
+        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         var artistInfo = getInfoFromLocalDataBase(artistName)
         artistInfo = if (artistInfo != "") formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
         return artistInfo
