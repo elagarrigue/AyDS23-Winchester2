@@ -29,7 +29,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
-        return if (items.isEmpty()) null else items[0]
+        return items.firstOrNull() ?: ""
     }
     
     override fun onCreate(db: SQLiteDatabase) {
@@ -39,6 +39,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+
     private fun insertRowInDataBase(values: ContentValues) {
         writableDatabase.insert(TABLE_NAME, null, values)
     }

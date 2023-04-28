@@ -67,7 +67,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName:String?):String{
         var artistInfo = getInfoFromLocalDataBase(artistName)
-        artistInfo = if (artistInfo != null) formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
+        artistInfo = if (artistInfo != "") formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
         return artistInfo
     }
 
