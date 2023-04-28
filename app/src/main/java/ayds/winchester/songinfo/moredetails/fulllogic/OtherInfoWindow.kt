@@ -43,7 +43,7 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initProperties()
-        createThreadForInfo(intent.getStringExtra(ARTIST_NAME_EXTRA))
+        createThreadForInfo()
     }
 
     private fun initProperties() {
@@ -52,9 +52,9 @@ class OtherInfoWindow : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
     }
 
-    private fun createThreadForInfo(artistName: String?) {
+    private fun createThreadForInfo() {
         Thread {
-            displayArtistInfo(getArtistInfo(artistName))
+            displayArtistInfo(getArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA)))
         }.start()
     }
 
@@ -116,8 +116,6 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun JsonObject.getURL() = "$WIKIPEDIA_URL_PREFIX${this.getPageID()}"
 
     private fun JsonObject.getPageID() = this[SEARCH].asJsonArray[0].asJsonObject[PAGE_ID]
-
-    private fun noneArtistSnippet(artistSnippet: JsonElement?) = artistSnippet == null
 
     private fun reformatToHtml(snippet: JsonElement, artistName: String?): String {
         val text1 = snippet.asString.replace("\\n", "\n")
