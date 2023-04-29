@@ -44,6 +44,7 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
         initProperties()
         createThreadForInfo()
+        //TODO 3 Setear el url del boton con la prop de la data class
     }
 
     private fun initProperties() {
@@ -54,44 +55,46 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadForInfo() {
         Thread {
-            displayArtistInfo(getArtistInfo())
+            val artist = getArtistInfo()
+            val description = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
+            displayArtistInfo(description, artist.wikipediaURL)
         }.start()
     }
 
-    private fun displayArtistInfo(artistInfo: String?) {
+    private fun displayArtistInfo(artistInfo: String?, url: String) {
         runOnUiThread {
             Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
             artistInfoTextPane.text = Html.fromHtml(artistInfo)
+            setOpenURLButtonListener(url)
         }
     }
 
-    private fun getArtistInfo():String{
+    private fun getArtistInfo():Artist{
         val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         var artistInfo = getInfoFromLocalDataBase(artistName)
-        artistInfo = if (artistInfo != "") formatInfoFromLocalDataBase(artistInfo) else formatInfoFromService(artistName)
-        return artistInfo
-    }
-
-    private fun formatInfoFromService(artistName: String?): String {
-        val artistInfoFromService = getInfoFromService(artistName)
-        setOpenURLButtonListener(artistInfoFromService.getURL())
-        return resolveArtistInfo(artistInfoFromService, artistName)
-    }
-
-    private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): String {
-        val artistInfo:String
-        val artistSnippet = artistInfoFromService.getSnippet()
-        if (artistSnippet == null) {
-            artistInfo = NO_RESULTS
-        } else {
-            artistInfo = reformatToHtml(artistSnippet, artistName)
-            saveArtistToDataBase(artistName, artistInfo)
+        if (!artistInfo.isLocallyStored) {
+            val artistInfoFromService = getInfoFromService(artistName)
+            artistInfo = resolveArtistInfo(artistInfoFromService,artistName)
+            if(artistInfo.description != NO_RESULTS)
+                saveArtistToDataBase(artistName,artistInfo.description)
         }
         return artistInfo
     }
 
-    private fun getInfoFromLocalDataBase(artistName: String?) =
-        dataBase.getArtistInfo(artistName)
+    private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): Artist {
+        val artistSnippet = artistInfoFromService.getSnippet()
+        return if (artistSnippet == null) {
+            Artist(NO_RESULTS)
+        } else {
+            Artist(reformatToHtml(artistSnippet, artistName),artistInfoFromService.getURL(),false)
+        }
+    }
+
+    private fun getInfoFromLocalDataBase(artistName: String?):Artist{
+        val description = dataBase.getArtistInfo(artistName)
+        return if (description == "") Artist("") else Artist(description, isLocallyStored = true)
+
+    }
 
     private fun formatInfoFromLocalDataBase(artistInfo: String?) = "[*]$artistInfo"
 
@@ -159,3 +162,10 @@ class OtherInfoWindow : AppCompatActivity() {
         dataBase.saveArtist(artistName, text)
     }
 }
+
+data class Artist(
+    var description: String,
+    var wikipediaURL: String = WIKIPEDIA_URL_PREFIX,
+    var isLocallyStored: Boolean = false,
+)
+
