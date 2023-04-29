@@ -44,7 +44,6 @@ class OtherInfoWindow : AppCompatActivity() {
         setContentView(R.layout.activity_other_info)
         initProperties()
         createThreadForInfo()
-        //TODO 3 Setear el url del boton con la prop de la data class
     }
 
     private fun initProperties() {
@@ -56,17 +55,17 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun createThreadForInfo() {
         Thread {
             val artist = getArtistInfo()
-            val description = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
+            val description = formatArtistInfo(artist)
             displayArtistInfo(description, artist.wikipediaURL)
         }.start()
     }
 
     private fun displayArtistInfo(artistInfo: String?, url: String) {
         runOnUiThread {
-            Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
-            artistInfoTextPane.text = Html.fromHtml(artistInfo)
-            setOpenURLButtonListener(url)
+            loadWikipediaLogo()
+            setArtistDescription(artistInfo)
         }
+        setOpenURLButtonListener(url)
     }
 
     private fun getArtistInfo():Artist{
@@ -161,6 +160,16 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun saveArtistToDataBase(artistName: String?, text: String) {
         dataBase.saveArtist(artistName, text)
     }
+
+    private fun loadWikipediaLogo(){
+        Picasso.get().load(DEFAULT_WIKIPEDIA_IMAGE).into(imageView)
+    }
+
+    private fun setArtistDescription(artistInfo: String?){
+        artistInfoTextPane.text = Html.fromHtml(artistInfo)
+    }
+
+    private fun formatArtistInfo(artist: Artist) = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
 }
 
 data class Artist(
