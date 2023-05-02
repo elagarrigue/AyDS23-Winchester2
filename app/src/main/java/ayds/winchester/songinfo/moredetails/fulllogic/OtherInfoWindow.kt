@@ -54,10 +54,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadForInfo() {
         Thread {
-            val artist = getArtistInfo()
-            val description = formatArtistInfo(artist)
-            displayArtistInfo(description, artist.wikipediaURL)
+            buildArtistInfo()
         }.start()
+    }
+
+    private fun buildArtistInfo() {
+        val artist = getArtistInfo()
+        val description = formatArtistInfo(artist)
+        displayArtistInfo(description, artist.wikipediaURL)
     }
 
     private fun displayArtistInfo(artistInfo: String?, url: String) {
