@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
+import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Artist
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -172,9 +173,5 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun formatArtistInfo(artist: Artist) = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
 }
 
-data class Artist(
-    var description: String,
-    var wikipediaURL: String = WIKIPEDIA_URL_PREFIX,
-    var isLocallyStored: Boolean = false,
-)
+
 

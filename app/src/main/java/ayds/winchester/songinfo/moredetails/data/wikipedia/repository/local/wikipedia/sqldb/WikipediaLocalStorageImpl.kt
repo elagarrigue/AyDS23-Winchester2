@@ -1,0 +1,64 @@
+package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Artist
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
+
+private const val DATABASE_VERSION = 1
+private const val DATABASE_NAME = "dictionary.db"
+
+internal class WikipediaLocalStorageImpl(
+    context: Context,
+    private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
+    WikipediaLocalStorage {
+
+    private val projection = arrayOf(
+        COLUMN_ID,
+        COLUMN_ARTIST,
+        COLUMN_INFO
+    )
+
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(
+            SQL_CREATE_TABLE
+        )
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+
+    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        onUpgrade(db, oldVersion, newVersion)
+    }
+
+    override fun insertArtist(query: String, artist: Artist) {
+        val values = ContentValues().apply{
+            put(COLUMN_ID, artist.id)
+            put(COLUMN_ARTIST, artist.name)
+            put(COLUMN_INFO, artist.description)
+            put(COLUMN_URL, artist.wikipediaURL)
+            put(
+                COLUMN_SOURCE,
+                VALUE_SOURCE
+            )
+        }
+        writableDatabase.insert(TABLE_NAME, null, values)
+
+    }
+
+    override fun getArtistInfo(artist: String?): Artist? {
+        val cursor = readableDatabase.query(
+            TABLE_NAME,
+            projection,
+            COLUMNS_FOR_WHERE,
+            arrayOf(artist),
+            null,
+            null,
+            SORT_ORDER_CURSOR
+        )
+        return cursorToWikipediaInfoMapper.map(cursor)
+    }
+}
