@@ -29,7 +29,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
         val cursor = createDataBaseQuery(artist)
         val items = getCursorInfo(cursor)
         cursor.close()
-        return items.firstOrNull() ?: ""
+        return items
     }
     
     override fun onCreate(db: SQLiteDatabase) {
@@ -63,15 +63,14 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DICTIONARY_DATABAS
             SORT_ORDER_CURSOR
         )
 
-    private fun getCursorInfo(cursor: Cursor): MutableList<String> {
-        val items: MutableList<String> = ArrayList()
-        while (cursor.moveToNext()) {
-            val info = cursor.getString(
+    private fun getCursorInfo(cursor: Cursor): String {
+        var info = ""
+        if (cursor.moveToNext()) {
+            info = cursor.getString(
                 cursor.getColumnIndexOrThrow(COLUMN_INFO)
             )
-            items.add(info)
         }
-        return items
+        return info
     }
 
     private fun columnsToReturn() = arrayOf(

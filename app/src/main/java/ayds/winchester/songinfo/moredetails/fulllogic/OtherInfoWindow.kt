@@ -41,12 +41,12 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
         initProperties()
         createThreadForInfo()
     }
 
     private fun initProperties() {
+        setContentView(R.layout.activity_other_info)
         artistInfoTextPane = findViewById(R.id.textPane2)
         openUrlButton = findViewById(R.id.openUrlButton)
         imageView = findViewById(R.id.imageView)
@@ -54,22 +54,18 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun createThreadForInfo() {
         Thread {
-            buildArtistInfo()
+            displayWindow()
         }.start()
     }
 
-    private fun buildArtistInfo() {
+    private fun displayWindow() {
         val artist = getArtistInfo()
         val description = formatArtistInfo(artist)
-        displayArtistInfo(description, artist.wikipediaURL)
-    }
-
-    private fun displayArtistInfo(artistInfo: String?, url: String) {
         runOnUiThread {
             loadWikipediaLogo()
-            setArtistDescription(artistInfo)
+            setArtistDescription(description)
         }
-        setOpenURLButtonListener(url)
+        setOpenURLButtonListener(artist.wikipediaURL)
     }
 
     private fun getArtistInfo():Artist{
