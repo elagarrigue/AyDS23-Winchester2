@@ -1,21 +1,21 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb
 
 import android.database.Cursor
-import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Artist
+import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Info.ArtistInfo
 import java.sql.SQLException
 
 interface CursorToWikipediaInfoMapper {
 
-    fun map(cursor: Cursor): Artist?
+    fun map(cursor: Cursor): ArtistInfo?
 }
 
 internal class CursorToWikipediaInfoMapperImpl : CursorToWikipediaInfoMapper {
 
-    override fun map(cursor: Cursor): Artist? =
+    override fun map(cursor: Cursor): ArtistInfo? =
         try {
             with(cursor) {
                 if (moveToNext()) {
-                    Artist(
+                    ArtistInfo(
                         id = getString(getColumnIndexOrThrow(COLUMN_ID)),
                         name = getString(getColumnIndexOrThrow(COLUMN_ARTIST)),
                         description = getString(getColumnIndexOrThrow(COLUMN_INFO)),

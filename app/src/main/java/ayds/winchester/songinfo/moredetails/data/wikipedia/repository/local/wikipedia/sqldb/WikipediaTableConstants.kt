@@ -9,4 +9,9 @@ const val TABLE_NAME = "artists"
 const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 const val VALUE_SOURCE = 1
-const val SQL_CREATE_TABLE = "create table $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_ARTIST, $COLUMN_INFO, $COLUMN_SOURCE)"
+const val SQL_CREATE_TABLE =
+    "create table $TABLE_NAME (" +
+            "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "$COLUMN_ARTIST, " +
+            "$COLUMN_INFO, " +
+            "$COLUMN_SOURCE)"
