@@ -4,7 +4,7 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Info.ArtistInf
 
 interface WikipediaLocalStorage {
 
-    fun insertInfo(query: String, artist: ArtistInfo)
+    fun insertInfo(artistName: String, artist: ArtistInfo)
 
     fun getInfo(artist: String?): ArtistInfo?
 }

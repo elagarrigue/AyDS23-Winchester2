@@ -32,10 +32,9 @@ internal class WikipediaLocalStorageImpl(
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    override fun insertInfo(query: String, artist: ArtistInfo) {
+    override fun insertInfo(artistName: String, artist: ArtistInfo) {
         val values = ContentValues().apply{
-            put(COLUMN_ID, artist.id)
-            put(COLUMN_ARTIST, artist.name)
+            put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, artist.description)
             put(COLUMN_URL, artist.wikipediaURL)
             put(
