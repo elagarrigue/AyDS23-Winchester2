@@ -16,8 +16,6 @@ internal class CursorToWikipediaInfoMapperImpl : CursorToWikipediaInfoMapper {
             with(cursor) {
                 if (moveToNext()) {
                     ArtistInfo(
-                        id = getString(getColumnIndexOrThrow(COLUMN_ID)),
-                        name = getString(getColumnIndexOrThrow(COLUMN_ARTIST)),
                         description = getString(getColumnIndexOrThrow(COLUMN_INFO)),
                         wikipediaURL = getString(getColumnIndexOrThrow(COLUMN_URL)),
                         isLocallyStored = false
