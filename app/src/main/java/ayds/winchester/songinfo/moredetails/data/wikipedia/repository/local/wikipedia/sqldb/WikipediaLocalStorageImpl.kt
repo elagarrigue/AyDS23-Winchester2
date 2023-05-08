@@ -19,11 +19,13 @@ internal class WikipediaLocalStorageImpl(
     private val projection = arrayOf(
         COLUMN_ID,
         COLUMN_ARTIST,
-        COLUMN_INFO
+        COLUMN_INFO,
+        COLUMN_URL
     )
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_TABLE)
+        print("hola")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
@@ -56,6 +58,8 @@ internal class WikipediaLocalStorageImpl(
             null,
             SORT_ORDER_CURSOR
         )
-        return cursorToWikipediaInfoMapper.map(cursor)
+        val artistInfo = cursorToWikipediaInfoMapper.map(cursor)
+        cursor.close()
+        return artistInfo
     }
 }

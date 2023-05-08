@@ -30,19 +30,22 @@ object MoreDetailsInjector {
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
 
+    private lateinit var repository: InfoRepository
+    private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
-    val repository: InfoRepository = InfoRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
 
     fun init(moreDetailsView: MoreDetailsView){
-        initLocalStorage(moreDetailsView)
-        initMoreDetailsPresenter(moreDetailsView)
+        this.moreDetailsView = moreDetailsView
+        initLocalStorage()
+        initMoreDetailsPresenter()
     }
 
-    private fun initLocalStorage(moreDetailsView: MoreDetailsView){
+    private fun initLocalStorage(){
         wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
+        repository = InfoRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
     }
 
-    private fun initMoreDetailsPresenter(moreDetailsView: MoreDetailsView){
+    private fun initMoreDetailsPresenter(){
         moreDetailsPresenter = MoreDetailsPresenterImpl(repository)
         moreDetailsPresenter.setMoreDetailsView(moreDetailsView)
     }
