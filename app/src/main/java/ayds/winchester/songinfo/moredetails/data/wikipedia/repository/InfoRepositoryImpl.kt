@@ -1,14 +1,12 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
 
-import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Info
-import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Info.EmptyInfo
-import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Info
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.WikipediaTrackService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
+import ayds.winchester.songinfo.moredetails.domain.repository.InfoRepository
 
-interface InfoRepository {
-    fun getInfo(artist: String): Info
-}
 
 internal class InfoRepositoryImpl(
     private val wikipediaLocalStorage: WikipediaLocalStorage,

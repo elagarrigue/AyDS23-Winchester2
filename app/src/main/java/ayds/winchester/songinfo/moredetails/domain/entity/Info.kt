@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.entity
+package ayds.winchester.songinfo.moredetails.domain.entity
 
 sealed class Info {
 
