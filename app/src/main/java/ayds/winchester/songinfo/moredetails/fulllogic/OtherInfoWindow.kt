@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.moredetails.data.wikipedia.entity.Artist
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -69,7 +69,7 @@ class OtherInfoWindow : AppCompatActivity() {
         setOpenURLButtonListener(artist.wikipediaURL)
     }
 
-    private fun getArtistInfo():Artist{
+    private fun getArtistInfo():ArtistInfo{
         val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         var artistInfo = getInfoFromLocalDataBase(artistName)
         if (!artistInfo.isLocallyStored) {
@@ -81,18 +81,18 @@ class OtherInfoWindow : AppCompatActivity() {
         return artistInfo
     }
 
-    private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): Artist {
+    private fun resolveArtistInfo(artistInfoFromService: JsonObject, artistName: String?): ArtistInfo {
         val artistSnippet = artistInfoFromService.getSnippet()
         return if (artistSnippet == null) {
-            Artist(NO_RESULTS)
+            ArtistInfo(NO_RESULTS, WIKIPEDIA_URL_PREFIX)
         } else {
-            Artist(reformatToHtml(artistSnippet, artistName),artistInfoFromService.getURL(),false)
+            ArtistInfo(reformatToHtml(artistSnippet, artistName),artistInfoFromService.getURL(),false)
         }
     }
 
-    private fun getInfoFromLocalDataBase(artistName: String?):Artist{
+    private fun getInfoFromLocalDataBase(artistName: String?):ArtistInfo{
         val description = dataBase.getArtistInfo(artistName)
-        return if (description == "") Artist("") else Artist(description, isLocallyStored = true)
+        return if (description == "") ArtistInfo("",WIKIPEDIA_URL_PREFIX) else ArtistInfo(description,WIKIPEDIA_URL_PREFIX, isLocallyStored = true)
 
     }
 
@@ -170,7 +170,7 @@ class OtherInfoWindow : AppCompatActivity() {
         artistInfoTextPane.text = Html.fromHtml(artistInfo)
     }
 
-    private fun formatArtistInfo(artist: Artist) = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
+    private fun formatArtistInfo(artist: ArtistInfo) = if (artist.isLocallyStored) formatInfoFromLocalDataBase(artist.description) else artist.description
 }
 
 
