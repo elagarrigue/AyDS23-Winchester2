@@ -4,17 +4,17 @@ import com.google.gson.JsonElement
 import java.util.*
 
 interface HtmlFormatter {
-    fun reformatToHtml(snippet: JsonElement, artistName: String): String
+    fun reformatToHtml(snippet: String, artistName: String): String
 }
 
 private const val HTML_START_WIDTH = "<html><div width=400>"
 private const val HTML_FONT = "<font face=\"arial\">"
 private const val HTML_END = "</font></div></html>"
 
-class HtmlFormatterImpl(): HtmlFormatter{
+internal class HtmlFormatterImpl(): HtmlFormatter{
 
-    override fun reformatToHtml(snippet: JsonElement, artistName: String): String {
-        val text1 = snippet.asString.replace("\\n", "\n")
+    override fun reformatToHtml(snippet: String, artistName: String): String {
+        val text1 = snippet.replace("\\n", "\n")
         return textToHtml(text1, artistName)
     }
 
