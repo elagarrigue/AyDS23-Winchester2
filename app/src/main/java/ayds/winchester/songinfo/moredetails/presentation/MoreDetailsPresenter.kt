@@ -9,7 +9,7 @@ interface MoreDetailsPresenter {
     fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
 }
 
-class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository): MoreDetailsPresenter{
+class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository, private val infoDescriptionHelper: InfoDescriptionHelper): MoreDetailsPresenter{
     private lateinit var moreDetailsView: MoreDetailsView
 
     override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
@@ -39,11 +39,10 @@ class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository): More
         val artistName = moreDetailsView.getArtistName()
         when (val artistInfo = infoRepository.getInfo(artistName)) {
             is ArtistInfo -> {
-                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = artistInfo.description, artistInfoUrl = artistInfo.wikipediaURL)
+                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(artistInfo, artistName), artistInfoUrl = artistInfo.wikipediaURL)
             }
             is EmptyInfo -> {
-                // lógica para tratar Info vacío
-                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription ="nada", artistInfoUrl = "")
+                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = "", artistInfoUrl = "")
             }
         }
         moreDetailsView.updateArtistInfo()
