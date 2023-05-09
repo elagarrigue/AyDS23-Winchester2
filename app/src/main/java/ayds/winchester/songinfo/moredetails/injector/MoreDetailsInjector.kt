@@ -12,9 +12,7 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wiki
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.WikipediaLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.domain.repository.InfoRepository
-import ayds.winchester.songinfo.moredetails.presentation.MoreDetailsPresenter
-import ayds.winchester.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
-import ayds.winchester.songinfo.moredetails.presentation.MoreDetailsView
+import ayds.winchester.songinfo.moredetails.presentation.*
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -27,6 +25,9 @@ object MoreDetailsInjector {
     private val wikipediaToInfoResolver: WikipediaToInfoResolver = JsonToInfoResolver()
     private val wikipediaTrackService: WikipediaTrackService = WikipediaTrackServiceImpl(wikipediaTrackAPI, wikipediaToInfoResolver)
 
+    private val htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
+    private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(htmlFormatter)
+
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
 
@@ -35,9 +36,14 @@ object MoreDetailsInjector {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     fun init(moreDetailsView: MoreDetailsView){
-        this.moreDetailsView = moreDetailsView
+        initView(moreDetailsView)
         initLocalStorage()
         initMoreDetailsPresenter()
+    }
+
+    private fun initView(moreDetailsView: MoreDetailsView) {
+        moreDetailsView.setInfoDescriptionHelper(infoDescriptionHelper)
+        this.moreDetailsView = moreDetailsView
     }
 
     private fun initLocalStorage(){

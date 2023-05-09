@@ -11,7 +11,7 @@ private const val HTML_START_WIDTH = "<html><div width=400>"
 private const val HTML_FONT = "<font face=\"arial\">"
 private const val HTML_END = "</font></div></html>"
 
-internal class HtmlFormatterImpl(): HtmlFormatter{
+internal class HtmlFormatterImpl: HtmlFormatter{
 
     override fun reformatToHtml(snippet: String, artistName: String): String {
         val text1 = snippet.replace("\\n", "\n")
