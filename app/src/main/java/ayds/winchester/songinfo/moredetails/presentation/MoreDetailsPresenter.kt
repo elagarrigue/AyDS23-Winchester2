@@ -39,7 +39,7 @@ class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository): More
         val artistName = moreDetailsView.getArtistName()
         when (val artistInfo = infoRepository.getInfo(artistName)) {
             is ArtistInfo -> {
-                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = artistInfo.description, artistInfoUrl = artistInfo.wikipediaURL)
+                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = artistInfo.description, artistInfoUrl = artistInfo.wikipediaURL, isLocallyStored = artistInfo.isLocallyStored)
 
             }
             is EmptyInfo -> {
