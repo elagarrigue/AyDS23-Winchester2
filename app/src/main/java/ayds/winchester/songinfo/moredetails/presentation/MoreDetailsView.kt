@@ -21,7 +21,6 @@ interface MoreDetailsView {
     fun openExternalLink(url: String)
     fun getArtistName(): String
     fun updateArtistInfo()
-    fun setInfoDescriptionHelper(infoDescriptionHelper: InfoDescriptionHelper)
 }
 
 private const val DEFAULT_WIKIPEDIA_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
@@ -37,8 +36,6 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
-
-    private lateinit var infoDescriptionHelper: InfoDescriptionHelper
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -61,10 +58,6 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     override fun updateArtistInfo() {
         loadWikipediaLogo()
         setArtistDescription()
-    }
-
-    override fun setInfoDescriptionHelper(infoDescriptionHelper: InfoDescriptionHelper) {
-        this.infoDescriptionHelper = infoDescriptionHelper
     }
 
     private fun initModule() {

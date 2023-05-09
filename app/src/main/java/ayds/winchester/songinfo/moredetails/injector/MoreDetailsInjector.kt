@@ -42,7 +42,6 @@ object MoreDetailsInjector {
     }
 
     private fun initView(moreDetailsView: MoreDetailsView) {
-        moreDetailsView.setInfoDescriptionHelper(infoDescriptionHelper)
         this.moreDetailsView = moreDetailsView
     }
 
