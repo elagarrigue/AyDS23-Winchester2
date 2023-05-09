@@ -48,7 +48,7 @@ object MoreDetailsInjector {
 
     private fun initLocalStorage(){
         wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
-        repository = InfoRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
+        repository = InfoRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService, infoDescriptionHelper)
     }
 
     private fun initMoreDetailsPresenter(){

@@ -91,7 +91,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     private fun setArtistDescription(){
         runOnUiThread {
-            artistInfoTextPane.text = Html.fromHtml(infoDescriptionHelper.getInfoDescriptionText(this.uiState, this.getArtistName()))
+            artistInfoTextPane.text = Html.fromHtml(uiState.artistInfoDescription)
         }
     }
 

@@ -3,8 +3,7 @@ package ayds.winchester.songinfo.moredetails.presentation
 data class MoreDetailsUiState(
     val wikipediaDefaultImage: String = DEFAULT_IMAGE,
     val artistInfoDescription: String = "",
-    val artistInfoUrl: String = "",
-    val isLocallyStored: Boolean = false
+    val artistInfoUrl: String = ""
 ){
     companion object {
         const val DEFAULT_IMAGE =
