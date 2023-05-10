@@ -6,13 +6,13 @@ interface InfoDescriptionHelper {
     fun getInfoDescriptionText(artistInfo: ArtistInfo, artistName: String = ""): String
 }
 
-internal class InfoDescriptionHelperImpl(private val htmlFormatter: HtmlFormatter): InfoDescriptionHelper {
+internal class InfoDescriptionHelperImpl(private val descriptionFormatter: DescriptionFormatter): InfoDescriptionHelper {
     override fun getInfoDescriptionText(artistInfo: ArtistInfo, artistName: String) =
         "${
             if (artistInfo.isLocallyStored) "[*]" else ""
         }${artistInfo.getFormattedDescription(artistName)}"
 
     private fun ArtistInfo.getFormattedDescription(artistName: String) =
-        htmlFormatter.reformatToHtml(this.description, artistName)
+        descriptionFormatter.format(this.description, artistName)
 
 }

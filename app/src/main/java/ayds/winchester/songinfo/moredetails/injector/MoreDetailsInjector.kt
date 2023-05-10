@@ -25,8 +25,8 @@ object MoreDetailsInjector {
     private val wikipediaToInfoResolver: WikipediaToInfoResolver = JsonToInfoResolver()
     private val wikipediaTrackService: WikipediaTrackService = WikipediaTrackServiceImpl(wikipediaTrackAPI, wikipediaToInfoResolver)
 
-    private val htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
-    private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(htmlFormatter)
+    private val descriptionFormatter: DescriptionFormatter = HtmlDescriptionFormatter()
+    private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(descriptionFormatter)
 
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage

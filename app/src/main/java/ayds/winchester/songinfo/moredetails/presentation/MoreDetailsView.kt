@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.R
@@ -84,7 +85,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     private fun setArtistDescription(){
         runOnUiThread {
-            artistInfoTextPane.text = Html.fromHtml(uiState.artistInfoDescription)
+            artistInfoTextPane.text = HtmlCompat.fromHtml(uiState.artistInfoDescription,HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
 
