@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.InfoRepositoryImpl
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.WikipediaTrackService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.*
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.JsonToInfoResolver
@@ -11,7 +11,7 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wiki
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.WikipediaLocalStorageImpl
-import ayds.winchester.songinfo.moredetails.domain.repository.InfoRepository
+import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -31,7 +31,7 @@ object MoreDetailsInjector {
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
 
-    private lateinit var repository: InfoRepository
+    private lateinit var repository: WikipediaRepository
     private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
@@ -47,7 +47,7 @@ object MoreDetailsInjector {
 
     private fun initLocalStorage(){
         wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
-        repository = InfoRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
+        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
     }
 
     private fun initMoreDetailsPresenter(){

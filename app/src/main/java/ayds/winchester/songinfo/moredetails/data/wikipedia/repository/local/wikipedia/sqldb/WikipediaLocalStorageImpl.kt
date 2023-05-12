@@ -24,7 +24,6 @@ internal class WikipediaLocalStorageImpl(
     )
 
     override fun onCreate(db: SQLiteDatabase) {
-        print(SQL_CREATE_TABLE)
         db.execSQL(SQL_CREATE_TABLE)
     }
 

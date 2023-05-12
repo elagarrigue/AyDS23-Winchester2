@@ -5,12 +5,12 @@ import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.WikipediaTrackService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
-import ayds.winchester.songinfo.moredetails.domain.repository.InfoRepository
+import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
-internal class InfoRepositoryImpl(
+internal class WikipediaRepositoryImpl(
     private val wikipediaLocalStorage: WikipediaLocalStorage,
     private val wikipediaTrackService: WikipediaTrackService,
-) : InfoRepository {
+) : WikipediaRepository {
 
     override fun getInfo(artist: String): Info {
         var artistInfo = wikipediaLocalStorage.getInfo(artist)

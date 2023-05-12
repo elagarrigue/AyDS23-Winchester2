@@ -3,13 +3,13 @@ package ayds.winchester.songinfo.moredetails.presentation
 import ayds.observer.Observer
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
-import ayds.winchester.songinfo.moredetails.domain.repository.InfoRepository
+import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {
     fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
 }
 
-class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository, private val infoDescriptionHelper: InfoDescriptionHelper): MoreDetailsPresenter{
+internal class MoreDetailsPresenterImpl(private val wikipediaRepository: WikipediaRepository, private val infoDescriptionHelper: InfoDescriptionHelper): MoreDetailsPresenter{
     private lateinit var moreDetailsView: MoreDetailsView
 
     override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
