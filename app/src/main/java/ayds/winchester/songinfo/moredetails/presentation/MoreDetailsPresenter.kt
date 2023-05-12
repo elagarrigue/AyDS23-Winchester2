@@ -37,14 +37,20 @@ class MoreDetailsPresenterImpl(private val infoRepository: InfoRepository, priva
 
     private fun getArtistInfo(){
         val artistName = moreDetailsView.getArtistName()
-        when (val artistInfo = infoRepository.getInfo(artistName)) {
-            is ArtistInfo -> {
-                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(artistInfo, artistName), artistInfoUrl = artistInfo.wikipediaURL)
-            }
-            is EmptyInfo -> {
-                moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = "", artistInfoUrl = "")
-            }
+        when (val artistInfo = wikipediaRepository.getInfo(artistName)) {
+            is ArtistInfo ->
+                setArtistInfo(artistInfo,artistName)
+            is EmptyInfo ->
+                setEmptyInfo()
         }
         moreDetailsView.updateArtistInfo()
+    }
+
+    private fun setArtistInfo(artistInfo: ArtistInfo, artistName: String) {
+        moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(artistInfo, artistName), artistInfoUrl = artistInfo.wikipediaURL)
+    }
+
+    private fun setEmptyInfo() {
+        moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = "", artistInfoUrl = "")
     }
 }
