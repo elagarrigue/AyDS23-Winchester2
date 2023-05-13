@@ -32,27 +32,25 @@ object MoreDetailsInjector {
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
 
     private lateinit var repository: WikipediaRepository
-    private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     fun init(moreDetailsView: MoreDetailsView){
-        initView(moreDetailsView)
-        initLocalStorage()
-        initMoreDetailsPresenter()
+        initLocalStorage(moreDetailsView)
+        initRepository()
+        initMoreDetailsPresenter(moreDetailsView)
     }
 
-    private fun initView(moreDetailsView: MoreDetailsView) {
-        this.moreDetailsView = moreDetailsView
-    }
-
-    private fun initLocalStorage(){
-        wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
-        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
-    }
-
-    private fun initMoreDetailsPresenter(){
+    private fun initMoreDetailsPresenter(moreDetailsView: MoreDetailsView){
         moreDetailsPresenter = MoreDetailsPresenterImpl(repository, infoDescriptionHelper)
-        moreDetailsPresenter.setMoreDetailsView(moreDetailsView)
+        moreDetailsView.setMoreDetailsPresenter(moreDetailsPresenter)
+    }
+
+    private fun initLocalStorage(moreDetailsView: MoreDetailsView){
+        wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
+    }
+
+    private fun initRepository(){
+        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
     }
 
     private fun getRetrofit() = Retrofit.Builder()
