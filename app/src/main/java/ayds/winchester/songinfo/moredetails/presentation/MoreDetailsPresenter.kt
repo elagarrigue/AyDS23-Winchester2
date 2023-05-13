@@ -1,56 +1,45 @@
 package ayds.winchester.songinfo.moredetails.presentation
 
-import ayds.observer.Observer
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
+import ayds.observer.Observable
+import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {
-    fun setMoreDetailsView(moreDetailsView: MoreDetailsView)
+    val uiStateObservable: Observable<MoreDetailsUiState>
+    fun createThread(artistName: String)
 }
 
 internal class MoreDetailsPresenterImpl(private val wikipediaRepository: WikipediaRepository, private val infoDescriptionHelper: InfoDescriptionHelper): MoreDetailsPresenter{
-    private lateinit var moreDetailsView: MoreDetailsView
 
-    override fun setMoreDetailsView(moreDetailsView: MoreDetailsView) {
-        this.moreDetailsView = moreDetailsView
-        moreDetailsView.uiEventObservable.subscribe(observer)
-        createThread()
-    }
+    private val onActionSubject = Subject<MoreDetailsUiState>()
+    override val uiStateObservable = onActionSubject
 
-    private val observer: Observer<MoreDetailsUiEvent> =
-        Observer {value ->
-            when(value){
-                MoreDetailsUiEvent.ViewFullArticleUrl -> openInfoUrl()
-            }
-        }
-
-    private fun openInfoUrl() {
-        moreDetailsView.openExternalLink(moreDetailsView.uiState.artistInfoUrl)
-    }
-
-    private fun createThread(){
+    override fun createThread(artistName: String){
         Thread {
-            getArtistInfo()
+            getArtistInfo(artistName)
         }.start()
     }
 
-    private fun getArtistInfo(){
-        val artistName = moreDetailsView.getArtistName()
+    private fun getArtistInfo(artistName: String){
         when (val artistInfo = wikipediaRepository.getInfo(artistName)) {
             is ArtistInfo ->
-                setArtistInfo(artistInfo,artistName)
+                uiStateObservable.notify(buildUiStateArtistInfo(artistInfo, artistName))
             is EmptyInfo ->
-                setEmptyInfo()
+                uiStateObservable.notify(buildUiStateEmptyInfo())
         }
-        moreDetailsView.updateArtistInfo()
     }
 
-    private fun setArtistInfo(artistInfo: ArtistInfo, artistName: String) {
-        moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(artistInfo, artistName), artistInfoUrl = artistInfo.wikipediaURL)
-    }
+    private fun buildUiStateArtistInfo(artistInfo: ArtistInfo, artistName: String) =
+        MoreDetailsUiState(
+            artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(artistInfo, artistName),
+            artistInfoUrl = artistInfo.wikipediaURL
+        )
 
-    private fun setEmptyInfo() {
-        moreDetailsView.uiState = moreDetailsView.uiState.copy(artistInfoDescription = "", artistInfoUrl = "")
-    }
+    private fun buildUiStateEmptyInfo() =
+        MoreDetailsUiState(
+            artistInfoDescription = "",
+            artistInfoUrl = ""
+        )
 }
