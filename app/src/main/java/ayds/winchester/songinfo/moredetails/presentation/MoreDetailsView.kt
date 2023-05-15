@@ -52,7 +52,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateArtistInfo() {
-        moreDetailsPresenter.createThread(getArtistName())
+        moreDetailsPresenter.fetchArtistInfo(getArtistName())
     }
 
     override fun setMoreDetailsPresenter(moreDetailsPresenter: MoreDetailsPresenter) {
@@ -66,7 +66,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         setUrl(uiState.artistInfoUrl)
     }
 
-    private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA)?.let { it } ?: ""
+    private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
 
     private fun loadWikipediaLogo(logo: String){
         runOnUiThread {
