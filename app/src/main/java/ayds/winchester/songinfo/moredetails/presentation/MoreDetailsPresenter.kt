@@ -11,18 +11,21 @@ interface MoreDetailsPresenter {
     fun createThread(artistName: String)
 }
 
-internal class MoreDetailsPresenterImpl(private val wikipediaRepository: WikipediaRepository, private val infoDescriptionHelper: InfoDescriptionHelper): MoreDetailsPresenter{
+internal class MoreDetailsPresenterImpl(
+    private val wikipediaRepository: WikipediaRepository,
+    private val infoDescriptionHelper: InfoDescriptionHelper
+) : MoreDetailsPresenter {
 
     private val onActionSubject = Subject<MoreDetailsUiState>()
     override val uiStateObservable = onActionSubject
 
-    override fun createThread(artistName: String){
+    override fun createThread(artistName: String) {
         Thread {
             getArtistInfo(artistName)
         }.start()
     }
 
-    private fun getArtistInfo(artistName: String){
+    private fun getArtistInfo(artistName: String) {
         when (val artistInfo = wikipediaRepository.getInfo(artistName)) {
             is ArtistInfo ->
                 uiStateObservable.notify(buildUiStateArtistInfo(artistInfo, artistName))

@@ -26,7 +26,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private val observer: Observer<MoreDetailsUiState> =
         Observer {
-                value -> updateState(value)
+                value -> updateView(value)
         }
 
     companion object {
@@ -60,7 +60,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         moreDetailsPresenter.uiStateObservable.subscribe(observer)
     }
 
-    private fun updateState(uiState: MoreDetailsUiState){
+    private fun updateView(uiState: MoreDetailsUiState){
         loadWikipediaLogo(uiState.wikipediaDefaultImage)
         setArtistDescription(uiState.artistInfoDescription)
         setUrl(uiState.artistInfoUrl)
