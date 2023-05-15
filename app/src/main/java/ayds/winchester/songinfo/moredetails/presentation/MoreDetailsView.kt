@@ -26,7 +26,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private val observer: Observer<MoreDetailsUiState> =
         Observer {
-                value -> updateState(value)
+                value -> updateView(value)
         }
 
     companion object {
@@ -52,7 +52,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateArtistInfo() {
-        moreDetailsPresenter.createThread(getArtistName())
+        moreDetailsPresenter.fetchArtistInfo(getArtistName())
     }
 
     override fun setMoreDetailsPresenter(moreDetailsPresenter: MoreDetailsPresenter) {
@@ -60,13 +60,13 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         moreDetailsPresenter.uiStateObservable.subscribe(observer)
     }
 
-    private fun updateState(uiState: MoreDetailsUiState){
+    private fun updateView(uiState: MoreDetailsUiState){
         loadWikipediaLogo(uiState.wikipediaDefaultImage)
         setArtistDescription(uiState.artistInfoDescription)
         setUrl(uiState.artistInfoUrl)
     }
 
-    private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA)?.let { it } ?: ""
+    private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
 
     private fun loadWikipediaLogo(logo: String){
         runOnUiThread {
