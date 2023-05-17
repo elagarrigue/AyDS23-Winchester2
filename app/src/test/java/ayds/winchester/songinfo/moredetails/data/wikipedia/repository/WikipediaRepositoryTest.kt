@@ -10,7 +10,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
-const val ARTIST = "artist"
+private const val ARTIST = "artist"
 class WikipediaRepositoryTest {
 
     private val wikipediaLocalStorage: WikipediaLocalStorage = mockk(relaxUnitFun = true)
