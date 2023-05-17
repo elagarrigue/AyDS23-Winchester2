@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-private const val ARTIST_NAME = "The Beatles"
+private const val ARTIST_NAME_TEST = "The Beatles"
 class MoreDetailsPresenterTest {
 
     private val artistInfo = ArtistInfo("Some info", "Some url")
@@ -19,31 +19,31 @@ class MoreDetailsPresenterTest {
 
     @Test
     fun `Given an artist name when getArtistInfo is called then should call the correct methods from the repository and notify the ui state observable with the expected ui state`() {
-        val expectedUiState = MoreDetailsUiState(artistInfoDescription = "Some Info", artistInfoUrl = "Some URL")
-        every { wikipediaRepository.getInfo(ARTIST_NAME) } returns artistInfo
-        every { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME) } returns "Some info"
+        val expectedUiState = MoreDetailsUiState(artistInfoDescription = "Some info", artistInfoUrl = "Some url")
+        every { wikipediaRepository.getInfo(ARTIST_NAME_TEST) } returns artistInfo
+        every { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) } returns "Some info"
 
         val infoTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
         presenter.uiStateObservable.subscribe {
             infoTester(it)
         }
-        presenter.fetchArtistInfo(ARTIST_NAME)
+        presenter.fetchArtistInfo(ARTIST_NAME_TEST)
 
-        verify { wikipediaRepository.getInfo(ARTIST_NAME) }
-        verify { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME) }
+        verify { wikipediaRepository.getInfo(ARTIST_NAME_TEST) }
+        verify { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) }
         verify { infoTester(expectedUiState) }
     }
 
     @Test
     fun `Given an artist name that returns an empty info when getArtistInfo is called then should notify the ui state observable with the expected ui state`() {
         val expectedUiState = MoreDetailsUiState(artistInfoDescription = "", artistInfoUrl = "")
-        every { wikipediaRepository.getInfo(ARTIST_NAME) } returns emptyInfo
+        every { wikipediaRepository.getInfo(ARTIST_NAME_TEST) } returns emptyInfo
 
         val infoTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
         presenter.uiStateObservable.subscribe {
             infoTester(it)
         }
-        presenter.fetchArtistInfo(ARTIST_NAME)
+        presenter.fetchArtistInfo(ARTIST_NAME_TEST)
 
         verify { infoTester(expectedUiState) }
     }
