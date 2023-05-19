@@ -1,0 +1,3 @@
+[submodule "libs/WikipediaExternal"]
+	path = libs/WikipediaExternal
+	url = https://github.com/AldanaNonnenmacher/AyDS23-Winchester2-SubModuleWikipedia.git
