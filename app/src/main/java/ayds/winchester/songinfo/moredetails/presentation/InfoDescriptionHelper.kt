@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.presentation
 
-import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
 
 interface InfoDescriptionHelper {
     fun getInfoDescriptionText(artistInfo: ArtistInfo, artistName: String = ""): String

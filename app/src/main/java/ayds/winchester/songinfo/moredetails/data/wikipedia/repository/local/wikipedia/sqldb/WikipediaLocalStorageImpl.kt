@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 
 private const val DATABASE_VERSION = 1

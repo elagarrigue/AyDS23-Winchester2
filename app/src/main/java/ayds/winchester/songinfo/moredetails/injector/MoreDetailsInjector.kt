@@ -6,6 +6,7 @@ import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.JsonToInfoResolver
 import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaTrackAPI
 import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaTrackServiceImpl
+import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaToInfoResolver
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
@@ -21,7 +22,7 @@ object MoreDetailsInjector {
 
     private val wikipediaAPIRetrofit = getRetrofit()
     private val wikipediaTrackAPI = getWikipediaAPI(wikipediaAPIRetrofit)
-    private val wikipediaToInfoResolver: ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaToInfoResolver = JsonToInfoResolver()
+    private val wikipediaToInfoResolver: WikipediaToInfoResolver = JsonToInfoResolver()
     private val wikipediaTrackService: WikipediaTrackService =
         WikipediaTrackServiceImpl(
             wikipediaTrackAPI,
