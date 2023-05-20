@@ -33,7 +33,7 @@ internal class HtmlDescriptionFormatter: DescriptionFormatter{
             .replace("\n", "<br>")
             .replace(
                 "(?i)$term".toRegex(),
-                "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+                "<b>" + term.uppercase(Locale.getDefault()) + "</b>"
             )
     }
 

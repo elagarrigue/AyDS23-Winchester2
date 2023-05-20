@@ -2,9 +2,9 @@ package ayds.winchester.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.winchester.songinfo.moredetails.domain.entity.Info
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
+import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info
+import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
+import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.EmptyInfo
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {

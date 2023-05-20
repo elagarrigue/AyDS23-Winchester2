@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.presentation
 
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals

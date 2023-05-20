@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia
 
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
 
 interface WikipediaLocalStorage {
 

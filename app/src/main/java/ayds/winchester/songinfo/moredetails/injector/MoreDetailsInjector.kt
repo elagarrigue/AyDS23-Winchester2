@@ -2,11 +2,10 @@ package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.WikipediaTrackService
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.*
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.JsonToInfoResolver
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.WikipediaTrackAPI
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.WikipediaTrackServiceImpl
+import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
+import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.JsonToInfoResolver
+import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaTrackAPI
+import ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaTrackServiceImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
@@ -22,8 +21,12 @@ object MoreDetailsInjector {
 
     private val wikipediaAPIRetrofit = getRetrofit()
     private val wikipediaTrackAPI = getWikipediaAPI(wikipediaAPIRetrofit)
-    private val wikipediaToInfoResolver: WikipediaToInfoResolver = JsonToInfoResolver()
-    private val wikipediaTrackService: WikipediaTrackService = WikipediaTrackServiceImpl(wikipediaTrackAPI, wikipediaToInfoResolver)
+    private val wikipediaToInfoResolver: ayds.winchester2.wikipediaexternal.data.wikipedia.tracks.WikipediaToInfoResolver = JsonToInfoResolver()
+    private val wikipediaTrackService: WikipediaTrackService =
+        WikipediaTrackServiceImpl(
+            wikipediaTrackAPI,
+            wikipediaToInfoResolver
+        )
 
     private val descriptionFormatter: DescriptionFormatter = HtmlDescriptionFormatter()
     private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(descriptionFormatter)
