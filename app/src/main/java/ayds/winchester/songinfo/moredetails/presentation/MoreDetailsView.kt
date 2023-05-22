@@ -69,6 +69,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     private fun updateView(uiState: MoreDetailsUiState){
         loadWikipediaLogo(uiState.wikipediaDefaultImage)
         setArtistDescription(uiState.artistInfoDescription)
+        updateButton(uiState.buttonEnabled)
         setUrl(uiState.artistInfoUrl)
     }
 
@@ -83,6 +84,12 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     private fun setArtistDescription(artistInfoDescription: String){
         runOnUiThread {
             artistInfoTextPane.text = HtmlCompat.fromHtml(artistInfoDescription,HtmlCompat.FROM_HTML_MODE_LEGACY)
+        }
+    }
+
+    private fun updateButton(buttonEnabled: Boolean) {
+        runOnUiThread {
+            openUrlButton.isEnabled = buttonEnabled
         }
     }
 

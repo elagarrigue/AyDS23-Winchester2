@@ -19,7 +19,7 @@ internal class MoreDetailsPresenterImpl(
 
     private val onActionSubject = Subject<MoreDetailsUiState>()
     override val uiStateObservable = onActionSubject
-    private var moreDetailsUiState = MoreDetailsUiState(artistInfoDescription = "", artistInfoUrl = "")
+    private var moreDetailsUiState = MoreDetailsUiState()
 
     override fun fetchArtistInfo(artistName: String) {
         Thread {
@@ -38,11 +38,9 @@ internal class MoreDetailsPresenterImpl(
             is ArtistInfo -> moreDetailsUiState.copy(
                 artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(
                     artistInfo, artistName
-                ), artistInfoUrl = artistInfo.wikipediaURL
+                ), artistInfoUrl = artistInfo.wikipediaURL, buttonEnabled = true
             )
-            is EmptyInfo -> moreDetailsUiState.copy(
-                artistInfoDescription = "", artistInfoUrl = ""
-            )
+            is EmptyInfo -> this.moreDetailsUiState
         }
     }
 }
