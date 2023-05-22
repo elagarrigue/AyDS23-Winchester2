@@ -35,7 +35,7 @@ android {
 dependencies {
 
     implementation project(":observer")
-    implementation project(":wikipediaexternal")
+    implementation project(':wikipediadata')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -54,6 +54,6 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(':wikipediadata')
 
-    implementation project(':wikipediaexternal')
 }

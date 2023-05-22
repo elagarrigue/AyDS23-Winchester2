@@ -1,8 +1,8 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
 
-import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.EmptyInfo
-import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.Info.ArtistInfo
-import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
+import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.EmptyInfo
+import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.ArtistInfo
+import ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 import io.mockk.*
@@ -14,7 +14,7 @@ private const val ARTIST = "artist"
 class WikipediaRepositoryTest {
 
     private val wikipediaLocalStorage: WikipediaLocalStorage = mockk(relaxUnitFun = true)
-    private val wikipediaTrackService: ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService = mockk(relaxUnitFun = true)
+    private val wikipediaTrackService: ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService = mockk(relaxUnitFun = true)
     private val wikipediaRepository: WikipediaRepository by lazy {
         WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
     }

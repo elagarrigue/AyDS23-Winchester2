@@ -3,8 +3,8 @@ package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
 import ayds.winchester.songinfo.moredetails.domain.entity.Info
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
 import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
-import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
-import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo as ArtistInfoService
+import ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService
+import ayds.winchester2.wikipediadata.data.wikipedia.entity.ArtistInfo as ArtistInfoService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
