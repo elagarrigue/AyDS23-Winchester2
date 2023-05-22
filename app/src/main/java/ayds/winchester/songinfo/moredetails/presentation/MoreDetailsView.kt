@@ -71,6 +71,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         setArtistDescription(uiState.artistInfoDescription)
         updateButton(uiState.buttonEnabled)
         setUrl(uiState.artistInfoUrl)
+        setSourceLabel(uiState.sourceName)
     }
 
     private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
@@ -98,6 +99,12 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
             openUrlButton.setOnClickListener{
                 navigationUtils.openExternalUrl(this, url)
             }
+        }
+    }
+
+    private fun setSourceLabel(sourceName: String){
+        runOnUiThread {
+            sourceLabel.text = sourceName
         }
     }
 }

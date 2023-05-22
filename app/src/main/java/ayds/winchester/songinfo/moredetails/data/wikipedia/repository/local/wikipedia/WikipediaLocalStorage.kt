@@ -1,10 +1,10 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia
 
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
 
 interface WikipediaLocalStorage {
 
-    fun insertInfo(artistName: String, artist: ArtistInfo)
+    fun insertInfo(artistName: String, artist: ArtistCard)
 
-    fun getInfo(artist: String?): ArtistInfo?
+    fun getInfo(artist: String?): ArtistCard?
 }

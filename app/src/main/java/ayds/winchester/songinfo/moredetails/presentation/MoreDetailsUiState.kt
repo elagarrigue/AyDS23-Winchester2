@@ -4,7 +4,8 @@ data class MoreDetailsUiState(
     val wikipediaDefaultImage: String = DEFAULT_IMAGE,
     val artistInfoDescription: String = NO_RESULTS,
     val artistInfoUrl: String = "",
-    val buttonEnabled: Boolean = false
+    val buttonEnabled: Boolean = false,
+    val sourceName: String = ""
 ){
     companion object {
         const val NO_RESULTS = "No Results"

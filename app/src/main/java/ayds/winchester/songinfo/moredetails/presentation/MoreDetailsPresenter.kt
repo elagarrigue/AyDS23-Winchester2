@@ -2,9 +2,9 @@ package ayds.winchester.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.winchester.songinfo.moredetails.domain.entity.Info
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
+import ayds.winchester.songinfo.moredetails.domain.entity.Card.EmptyCard
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {
@@ -33,14 +33,16 @@ internal class MoreDetailsPresenterImpl(
         uiStateObservable.notify(moreDetailsUiState)
     }
 
-    private fun updateUiState(artistInfo: Info, artistName: String) {
-        moreDetailsUiState = when (artistInfo) {
-            is ArtistInfo -> moreDetailsUiState.copy(
+    private fun updateUiState(artistCard: Card, artistName: String) {
+        moreDetailsUiState = when (artistCard) {
+            is ArtistCard -> moreDetailsUiState.copy(
                 artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(
-                    artistInfo, artistName
-                ), artistInfoUrl = artistInfo.wikipediaURL, buttonEnabled = true
+                    artistCard, artistName
+                ), artistInfoUrl = artistCard.infoURL,
+                buttonEnabled = true,
+                sourceName = artistCard.source.toString()
             )
-            is EmptyInfo -> this.moreDetailsUiState
+            is EmptyCard -> this.moreDetailsUiState
         }
     }
 }

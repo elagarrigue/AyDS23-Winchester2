@@ -1,8 +1,8 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
 
-import ayds.winchester.songinfo.moredetails.domain.entity.Info
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.EmptyInfo
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.domain.entity.Card.EmptyCard
+import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
 import ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediadata.data.wikipedia.entity.ArtistInfo as ArtistInfoService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
@@ -13,7 +13,7 @@ internal class WikipediaRepositoryImpl(
     private val wikipediaTrackService: WikipediaTrackService,
 ) : WikipediaRepository {
 
-    override fun getInfo(artist: String): Info {
+    override fun getInfo(artist: String): Card {
         var artistInfo = wikipediaLocalStorage.getInfo(artist)
 
         when {
@@ -32,16 +32,16 @@ internal class WikipediaRepositoryImpl(
             }
         }
 
-        return artistInfo ?: EmptyInfo
+        return artistInfo ?: EmptyCard
     }
 
-    private fun markInfoAsLocal(info: ArtistInfo) {
+    private fun markInfoAsLocal(info: ArtistCard) {
         info.isLocallyStored = true
     }
 
     private fun ArtistInfoService.mapToLocalArtistInfo() =
-        ArtistInfo(
+        ArtistCard(
             description = this.description,
-            wikipediaURL = this.wikipediaURL
+            infoURL = this.wikipediaURL
         )
 }
