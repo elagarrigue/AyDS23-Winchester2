@@ -8,7 +8,7 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wiki
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.WikipediaLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
-import ayds.winchester2.wikipediadata.injector.WikipediaInjector
+import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
 
 
 object MoreDetailsInjector {

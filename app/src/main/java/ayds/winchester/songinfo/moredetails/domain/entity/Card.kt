@@ -10,7 +10,7 @@ sealed class Card {
         var description: String,
         var infoURL: String,
         var source: Source = Source.Wikipedia,
-        var sourceUrl: String = "",
+        var sourceLogoUrl: String = "",
         var isLocallyStored: Boolean = false,
     ): Card()
 
