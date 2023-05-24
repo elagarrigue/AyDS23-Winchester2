@@ -40,7 +40,8 @@ internal class MoreDetailsPresenterImpl(
                     artistCard, artistName
                 ), artistInfoUrl = artistCard.infoURL,
                 buttonEnabled = true,
-                sourceName = artistCard.source.toString()
+                sourceName = artistCard.source.toString(),
+                wikipediaDefaultImage = artistCard.sourceLogoUrl
             )
             is EmptyCard -> this.moreDetailsUiState
         }

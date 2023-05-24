@@ -2,6 +2,8 @@ package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.ArtistCardBroker
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.WikipediaProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
@@ -18,7 +20,9 @@ object MoreDetailsInjector {
 
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
-    private val wikipediaTrackService = WikipediaInjector.wikipediaTrackService
+
+    private val wikipediaProxy: WikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
+    private val artistCardBroker: ArtistCardBroker = ArtistCardBroker(wikipediaProxy)
 
     private lateinit var repository: WikipediaRepository
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
@@ -39,6 +43,6 @@ object MoreDetailsInjector {
     }
 
     private fun initRepository(){
-        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
+        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, artistCardBroker)
     }
 }
