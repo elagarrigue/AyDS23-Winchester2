@@ -20,7 +20,9 @@ internal class WikipediaLocalStorageImpl(
         COLUMN_ID,
         COLUMN_ARTIST,
         COLUMN_INFO,
-        COLUMN_URL
+        COLUMN_URL,
+        COLUMN_SOURCE_LOGO_URL,
+        COLUMN_SOURCE
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -38,10 +40,8 @@ internal class WikipediaLocalStorageImpl(
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, artist.description)
             put(COLUMN_URL, artist.infoURL)
-            put(
-                COLUMN_SOURCE,
-                VALUE_SOURCE
-            )
+            put(COLUMN_SOURCE_LOGO_URL, artist.sourceLogoUrl)
+            put(COLUMN_SOURCE, artist.source.ordinal)
         }
         writableDatabase.insert(TABLE_NAME, null, values)
 

@@ -3,6 +3,7 @@ package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wik
 import android.database.Cursor
 import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
 import java.sql.SQLException
+import javax.xml.transform.Source
 
 interface CursorToWikipediaInfoMapper {
 
@@ -18,7 +19,9 @@ internal class CursorToWikipediaInfoMapperImpl : CursorToWikipediaInfoMapper {
                     ArtistCard(
                         description = getString(getColumnIndexOrThrow(COLUMN_INFO)),
                         infoURL = getString(getColumnIndexOrThrow(COLUMN_URL)),
-                        isLocallyStored = false
+                        isLocallyStored = false,
+                        // TODO Source
+                        sourceLogoUrl = getString(getColumnIndexOrThrow(COLUMN_SOURCE_LOGO_URL))
                     )
                 } else {
                     null
