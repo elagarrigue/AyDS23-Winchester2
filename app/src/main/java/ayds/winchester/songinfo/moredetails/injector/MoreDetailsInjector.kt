@@ -1,8 +1,11 @@
 package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
+import ayds.aknewyork.external.service.injector.NYTimesInjector
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.ArtistCardBroker
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.LastFMProxy
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.NYTimesProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.WikipediaProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
@@ -11,6 +14,8 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wiki
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
 import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
+import lisboa4LastFM.LastFMAPI
+import lisboa4LastFM.LastFMInjector
 
 
 object MoreDetailsInjector {
@@ -22,7 +27,10 @@ object MoreDetailsInjector {
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
 
     private val wikipediaProxy: WikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
-    private val artistCardBroker: ArtistCardBroker = ArtistCardBroker(wikipediaProxy)
+    private val nyTimesProxy : NYTimesProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
+    private val lastFMProxy: LastFMProxy = LastFMProxy(LastFMInjector.getLastFmService())
+    private val proxiesList = listOf(wikipediaProxy, nyTimesProxy, lastFMProxy)
+    private val artistCardBroker: ArtistCardBroker = ArtistCardBroker(proxiesList)
 
     private lateinit var repository: WikipediaRepository
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter

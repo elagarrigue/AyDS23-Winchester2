@@ -1,7 +1,9 @@
 package ayds.winchester.songinfo.moredetails.domain.entity
 
 enum class Source {
-    Wikipedia
+    Wikipedia,
+    NYTimes,
+    LastFM
 }
 
 sealed class Card {
