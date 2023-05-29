@@ -6,15 +6,10 @@ enum class Source {
     LastFM
 }
 
-sealed class Card {
-
-    data class ArtistCard(
-        var description: String,
-        var infoURL: String,
-        var source: Source = Source.Wikipedia,
-        var sourceLogoUrl: String = "",
-        var isLocallyStored: Boolean = false,
-    ): Card()
-
-    object EmptyCard: Card()
-}
+data class Card(
+    var description: String,
+    var infoURL: String,
+    var source: Source = Source.Wikipedia,
+    var sourceLogoUrl: String = "",
+    var isLocallyStored: Boolean = false,
+)
