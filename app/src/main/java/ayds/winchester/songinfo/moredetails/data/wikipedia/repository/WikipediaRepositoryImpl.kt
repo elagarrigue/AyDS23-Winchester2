@@ -2,8 +2,6 @@ package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
 
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.Broker
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.EmptyCard
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
@@ -12,28 +10,23 @@ internal class WikipediaRepositoryImpl(
     private val artistCardBroker: Broker,
 ) : WikipediaRepository {
 
-    override fun getInfo(artist: String): Card {
-        var artistCard = wikipediaLocalStorage.getInfo(artist)
-
+    override fun getCards(artist: String): List<Card> {
+        var artistCards:List<Card> = wikipediaLocalStorage.getInfo(artist)
         when {
-            artistCard != null -> markInfoAsLocal(artistCard)
+            artistCards.isNotEmpty() -> markInfoAsLocal(artistCards)
             else -> {
                 try {
-                    artistCard = artistCardBroker.getCard(artist)
-
-                    artistCard?.let {
-                        wikipediaLocalStorage.insertInfo(artist,it)
-                    }
-                } catch (e: Exception) {
-                    artistCard = null
-                }
+                    artistCards = artistCardBroker.getCards(artist)
+                    for(artistCard in artistCards)
+                        wikipediaLocalStorage.insertInfo(artist, artistCard)
+                } catch (e: Exception) {}
             }
         }
-
-        return artistCard ?: EmptyCard
+        return artistCards
     }
 
-    private fun markInfoAsLocal(info: ArtistCard) {
-        info.isLocallyStored = true
+    private fun markInfoAsLocal(artists: List<Card>) {
+        for(artist in artists)
+            artist.isLocallyStored = true
     }
 }

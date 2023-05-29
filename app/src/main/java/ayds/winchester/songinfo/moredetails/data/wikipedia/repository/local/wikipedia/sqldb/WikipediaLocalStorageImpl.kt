@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 
 private const val DATABASE_VERSION = 1
@@ -35,7 +35,7 @@ internal class WikipediaLocalStorageImpl(
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    override fun insertInfo(artistName: String, artist: ArtistCard) {
+    override fun insertInfo(artistName: String, artist: Card) {
         val values = ContentValues().apply{
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, artist.description)
@@ -47,7 +47,7 @@ internal class WikipediaLocalStorageImpl(
 
     }
 
-    override fun getInfo(artist: String?): ArtistCard? {
+    override fun getInfo(artist: String?): List<Card> {
         val cursor = readableDatabase.query(
             TABLE_NAME,
             projection,
@@ -57,8 +57,8 @@ internal class WikipediaLocalStorageImpl(
             null,
             SORT_ORDER_CURSOR
         )
-        val artistInfo = cursorToWikipediaInfoMapper.map(cursor)
+        val artistCardList = cursorToWikipediaInfoMapper.map(cursor)
         cursor.close()
-        return artistInfo
+        return artistCardList
     }
 }

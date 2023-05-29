@@ -1,34 +1,38 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb
 
 import android.database.Cursor
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import java.sql.SQLException
-import javax.xml.transform.Source
+import ayds.winchester.songinfo.moredetails.domain.entity.Source
 
 interface CursorToWikipediaInfoMapper {
 
-    fun map(cursor: Cursor): ArtistCard?
+    fun map(cursor: Cursor): List<Card>
 }
 
 internal class CursorToWikipediaInfoMapperImpl : CursorToWikipediaInfoMapper {
 
-    override fun map(cursor: Cursor): ArtistCard? =
+    override fun map(cursor: Cursor): List<Card> {
+        val artistCards = mutableListOf<Card>()
         try {
             with(cursor) {
-                if (moveToNext()) {
-                    ArtistCard(
-                        description = getString(getColumnIndexOrThrow(COLUMN_INFO)),
-                        infoURL = getString(getColumnIndexOrThrow(COLUMN_URL)),
-                        isLocallyStored = false,
-                        // TODO Source
-                        sourceLogoUrl = getString(getColumnIndexOrThrow(COLUMN_SOURCE_LOGO_URL))
+                while (moveToNext()) {
+                    artistCards.add(
+                        Card(
+                            description = getString(getColumnIndexOrThrow(COLUMN_INFO)),
+                            infoURL = getString(getColumnIndexOrThrow(COLUMN_URL)),
+                            isLocallyStored = false,
+                            source = Source.values()[getInt(getColumnIndexOrThrow(COLUMN_SOURCE))],
+                            sourceLogoUrl = getString(getColumnIndexOrThrow(COLUMN_SOURCE_LOGO_URL))
+                        )
                     )
-                } else {
-                    null
                 }
             }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            null
         }
+        catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        return artistCards
+    }
+
 }
