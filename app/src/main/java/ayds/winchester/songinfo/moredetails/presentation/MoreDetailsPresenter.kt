@@ -3,8 +3,6 @@ package ayds.winchester.songinfo.moredetails.presentation
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.ArtistCard
-import ayds.winchester.songinfo.moredetails.domain.entity.Card.EmptyCard
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {
@@ -28,22 +26,30 @@ internal class MoreDetailsPresenterImpl(
     }
 
     private fun getArtistInfo(artistName: String) {
-        val artistInfo = wikipediaRepository.getInfo(artistName)
-        updateUiState(artistInfo, artistName)
+        val cards = wikipediaRepository.getCards(artistName)
+        updateUiState(cards, artistName)
         uiStateObservable.notify(moreDetailsUiState)
     }
 
-    private fun updateUiState(artistCard: Card, artistName: String) {
-        moreDetailsUiState = when (artistCard) {
-            is ArtistCard -> moreDetailsUiState.copy(
-                artistInfoDescription = infoDescriptionHelper.getInfoDescriptionText(
-                    artistCard, artistName
-                ), artistInfoUrl = artistCard.infoURL,
-                buttonEnabled = true,
-                sourceName = artistCard.source.toString(),
-                wikipediaDefaultImage = artistCard.sourceLogoUrl
+    private fun updateUiState(artistCards: List<Card>, artistName: String) {
+        moreDetailsUiState = moreDetailsUiState.copy(
+            cardList = formatArtistCards(artistCards, artistName)
+        )
+    }
+
+    private fun formatArtistCards(artistCards: List<Card>, artistName: String): List<Card>{
+        val formattedCards = artistCards.map {card ->
+            val formattedDescription = infoDescriptionHelper.getInfoDescriptionText(card, artistName)
+            Card(
+                description = formattedDescription,
+                infoURL = card.infoURL,
+                source = card.source,
+                sourceLogoUrl = card.sourceLogoUrl,
+                isLocallyStored = card.isLocallyStored
             )
-            is EmptyCard -> this.moreDetailsUiState
         }
+        return formattedCards
     }
 }
+
+

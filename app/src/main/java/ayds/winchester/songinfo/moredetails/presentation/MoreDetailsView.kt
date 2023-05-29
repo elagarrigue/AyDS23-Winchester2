@@ -67,11 +67,11 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateView(uiState: MoreDetailsUiState){
-        loadWikipediaLogo(uiState.wikipediaDefaultImage)
-        setArtistDescription(uiState.artistInfoDescription)
-        updateButton(uiState.buttonEnabled)
-        setUrl(uiState.artistInfoUrl)
-        setSourceLabel(uiState.sourceName)
+        loadWikipediaLogo(uiState.cardList[2].sourceLogoUrl)
+        setArtistDescription(uiState.cardList[2].description)
+        updateButton(true)
+        setUrl(uiState.cardList[2].infoURL)
+        setSourceLabel(uiState.cardList[2].source.toString())
     }
 
     private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""

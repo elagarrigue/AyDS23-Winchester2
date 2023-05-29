@@ -24,7 +24,7 @@ class WikipediaRepositoryTest {
     fun `given existing artist should return info and mark it as local`() {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns info
 
-        val result = wikipediaRepository.getInfo(ARTIST)
+        val result = wikipediaRepository.getCards(ARTIST)
 
         assertEquals(info, result)
         assertTrue(info.isLocallyStored)
@@ -35,7 +35,7 @@ class WikipediaRepositoryTest {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns null
         every { wikipediaTrackService.getInfo(ARTIST) } returns info
 
-        val result = wikipediaRepository.getInfo(ARTIST)
+        val result = wikipediaRepository.getCards(ARTIST)
 
         assertEquals(info, result)
         assertFalse(info.isLocallyStored)
@@ -47,7 +47,7 @@ class WikipediaRepositoryTest {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns null
         every { wikipediaTrackService.getInfo(ARTIST) } throws mockk<Exception>()
 
-        val result = wikipediaRepository.getInfo(ARTIST)
+        val result = wikipediaRepository.getCards(ARTIST)
 
         assertEquals(EmptyInfo, result)
     }
