@@ -1,14 +1,14 @@
 package ayds.winchester.songinfo.moredetails.presentation
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import ayds.winchester.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.winchester.songinfo.utils.UtilsInjector
 import ayds.winchester.songinfo.utils.navigation.NavigationUtils
@@ -27,6 +27,8 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var sourceLabel: TextView
     private lateinit var spinnerUI: Spinner
+
+    private lateinit var artistCards: List<Card>
 
     private val observer: Observer<MoreDetailsUiState> =
         Observer {
@@ -67,11 +69,57 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateView(uiState: MoreDetailsUiState){
-        loadWikipediaLogo(uiState.cardList[2].sourceLogoUrl)
-        setArtistDescription(uiState.cardList[2].description)
-        updateButton(true)
-        setUrl(uiState.cardList[2].infoURL)
-        setSourceLabel(uiState.cardList[2].source.toString())
+        initCards(uiState.cardList)
+        initSpinner()
+        initCard()
+        updateButton(uiState.actionsEnabled)
+    }
+
+    private fun initCard() {
+        updateCardView(getCard())
+    }
+
+    private fun getCard(cardIndex: Int = 0) =
+        when {
+            artistCards.isNotEmpty() -> artistCards[cardIndex]
+            else -> Card()
+        }
+
+    private fun initCards(cardList: List<Card>) {
+        artistCards = cardList
+    }
+
+    private fun initSpinner() {
+        val sourcesList: List<String> = when {
+            (artistCards.isEmpty()) ->
+                listOf(Source.NotFound.toString())
+            else -> artistCards.map { it.source.toString() }
+        }
+
+        runOnUiThread {
+            spinnerUI.adapter =
+                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sourcesList)
+        }
+
+        spinnerUI.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                index: Int,
+                id: Long
+            ) {
+                updateCardView(artistCards[index])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun updateCardView(card: Card) {
+        loadWikipediaLogo(card.sourceLogoUrl)
+        setArtistDescription(card.description)
+        setUrl(card.infoURL)
+        setSourceLabel(card.source.toString())
     }
 
     private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
@@ -90,6 +138,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     private fun updateButton(buttonEnabled: Boolean) {
         runOnUiThread {
+            spinnerUI.isEnabled = buttonEnabled
             openUrlButton.isEnabled = buttonEnabled
         }
     }
