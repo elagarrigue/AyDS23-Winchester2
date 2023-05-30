@@ -3,6 +3,7 @@ package ayds.winchester.songinfo.moredetails.presentation
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
 
 interface MoreDetailsPresenter {
@@ -32,9 +33,24 @@ internal class MoreDetailsPresenterImpl(
     }
 
     private fun updateUiState(artistCards: List<Card>, artistName: String) {
-        moreDetailsUiState = moreDetailsUiState.copy(
-            cardList = formatArtistCards(artistCards, artistName)
-        )
+        moreDetailsUiState = if (artistCards.isEmpty()) {
+            moreDetailsUiState.copy(
+                spinnerValues = listOf(Source.NotFound.toString())
+            )
+        } else {
+            moreDetailsUiState.copy(
+                cardList = formatArtistCards(artistCards, artistName),
+                actionsEnabled = true,
+                spinnerValues = formattedSpinnerValues(artistCards)
+                )
+        }
+    }
+
+    private fun formattedSpinnerValues(artistCards: List<Card>): List<String> {
+        val spinnerValues = artistCards.map {
+            it.source.toString()
+        }
+        return spinnerValues
     }
 
     private fun formatArtistCards(artistCards: List<Card>, artistName: String): List<Card>{
