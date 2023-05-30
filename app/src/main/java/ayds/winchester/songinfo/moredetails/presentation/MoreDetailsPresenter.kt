@@ -13,7 +13,8 @@ interface MoreDetailsPresenter {
 
 internal class MoreDetailsPresenterImpl(
     private val wikipediaRepository: WikipediaRepository,
-    private val infoDescriptionHelper: InfoDescriptionHelper
+    private val infoDescriptionHelper: InfoDescriptionHelper,
+    private val artistSourceToStringFactory: ArtistSourceToStringFactory,
 ) : MoreDetailsPresenter {
 
     private val onActionSubject = Subject<MoreDetailsUiState>()
@@ -48,7 +49,7 @@ internal class MoreDetailsPresenterImpl(
 
     private fun formatSourceValues(artistCards: List<Card>): List<String> {
         val spinnerValues = artistCards.map {
-            it.source.toString()
+            artistSourceToStringFactory.get(it.source)
         }
         return spinnerValues
     }

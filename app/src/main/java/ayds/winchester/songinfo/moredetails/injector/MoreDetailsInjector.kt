@@ -22,6 +22,7 @@ object MoreDetailsInjector {
 
     private val descriptionFormatter: DescriptionFormatter = HtmlDescriptionFormatter()
     private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(descriptionFormatter)
+    private val artistSourceToStringFactory: ArtistSourceToStringFactory = ArtistSourceToStringFactoryImpl()
 
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
     private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
@@ -42,7 +43,7 @@ object MoreDetailsInjector {
     }
 
     private fun initMoreDetailsPresenter(moreDetailsView: MoreDetailsView){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, infoDescriptionHelper)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, infoDescriptionHelper, artistSourceToStringFactory)
         moreDetailsView.setMoreDetailsPresenter(moreDetailsPresenter)
     }
 
