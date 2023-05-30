@@ -8,7 +8,6 @@ import androidx.core.text.HtmlCompat
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
-import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import ayds.winchester.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.winchester.songinfo.utils.UtilsInjector
 import ayds.winchester.songinfo.utils.navigation.NavigationUtils
@@ -69,36 +68,24 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateView(uiState: MoreDetailsUiState){
-        initCards(uiState.cardList)
-        initSpinner()
+        initArtistCards(uiState.cardList)
         initCard()
-        updateButton(uiState.actionsEnabled)
+        initSpinner(uiState.spinnerValues)
+        setActionsEnabled(uiState.actionsEnabled)
     }
 
     private fun initCard() {
-        updateCardView(getCard())
+        updateCardView(artistCards.first())
     }
 
-    private fun getCard(cardIndex: Int = 0) =
-        when {
-            artistCards.isNotEmpty() -> artistCards[cardIndex]
-            else -> Card()
-        }
-
-    private fun initCards(cardList: List<Card>) {
+    private fun initArtistCards(cardList: List<Card>) {
         artistCards = cardList
     }
 
-    private fun initSpinner() {
-        val sourcesList: List<String> = when {
-            (artistCards.isEmpty()) ->
-                listOf(Source.NotFound.toString())
-            else -> artistCards.map { it.source.toString() }
-        }
-
+    private fun initSpinner(spinnerValues: List<String>) {
         runOnUiThread {
             spinnerUI.adapter =
-                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sourcesList)
+                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinnerValues)
         }
 
         spinnerUI.onItemSelectedListener = object :
@@ -116,7 +103,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
     }
 
     private fun updateCardView(card: Card) {
-        loadWikipediaLogo(card.sourceLogoUrl)
+        loadSourceLogo(card.sourceLogoUrl)
         setArtistDescription(card.description)
         setUrl(card.infoURL)
         setSourceLabel(card.source.toString())
@@ -124,7 +111,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: ""
 
-    private fun loadWikipediaLogo(logo: String){
+    private fun loadSourceLogo(logo: String){
         runOnUiThread {
             Picasso.get().load(logo).into(imageView)
         }
@@ -136,7 +123,7 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         }
     }
 
-    private fun updateButton(buttonEnabled: Boolean) {
+    private fun setActionsEnabled(buttonEnabled: Boolean) {
         runOnUiThread {
             spinnerUI.isEnabled = buttonEnabled
             openUrlButton.isEnabled = buttonEnabled

@@ -41,12 +41,12 @@ internal class MoreDetailsPresenterImpl(
             moreDetailsUiState.copy(
                 cardList = formatArtistCards(artistCards, artistName),
                 actionsEnabled = true,
-                spinnerValues = formattedSpinnerValues(artistCards)
+                spinnerValues = formatSourceValues(artistCards)
                 )
         }
     }
 
-    private fun formattedSpinnerValues(artistCards: List<Card>): List<String> {
+    private fun formatSourceValues(artistCards: List<Card>): List<String> {
         val spinnerValues = artistCards.map {
             it.source.toString()
         }
