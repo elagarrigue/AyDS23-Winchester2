@@ -8,9 +8,9 @@ enum class Source {
 }
 
 data class Card(
-    var description: String = "No results",
-    var infoURL: String = "No results",
-    var source: Source = Source.NotFound,
-    var sourceLogoUrl: String = "No results",
+    val description: String,
+    val infoURL: String,
+    val source: Source = Source.NotFound,
+    val sourceLogoUrl: String,
     var isLocallyStored: Boolean = false,
 )

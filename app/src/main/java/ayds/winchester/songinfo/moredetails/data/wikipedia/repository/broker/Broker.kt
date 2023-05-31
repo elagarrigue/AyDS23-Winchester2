@@ -1,5 +1,6 @@
 package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker
 
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.Proxy
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 
 interface Broker {

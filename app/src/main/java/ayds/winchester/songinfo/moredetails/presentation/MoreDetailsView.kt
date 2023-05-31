@@ -8,6 +8,7 @@ import androidx.core.text.HtmlCompat
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import ayds.winchester.songinfo.moredetails.injector.MoreDetailsInjector
 import ayds.winchester.songinfo.utils.UtilsInjector
 import ayds.winchester.songinfo.utils.navigation.NavigationUtils
@@ -74,12 +75,14 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         setActionsEnabled(uiState.actionsEnabled)
     }
 
-    private fun initCard() {
-        updateCardView(artistCards.first())
-    }
-
     private fun initArtistCards(cardList: List<Card>) {
         artistCards = cardList
+    }
+
+    private fun initCard() {
+        if(artistCards.isEmpty())
+            artistCards = listOf(Card(description = "No results", infoURL = "No results", sourceLogoUrl = "No results"))
+        updateCardView(artistCards.first())
     }
 
     private fun initSpinner(spinnerValues: List<String>) {
@@ -130,17 +133,17 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
         }
     }
 
+    private fun setSourceLabel(sourceName: String){
+        runOnUiThread {
+            sourceLabel.text = sourceName
+        }
+    }
+
     private fun setUrl(url: String){
         runOnUiThread {
             openUrlButton.setOnClickListener{
                 navigationUtils.openExternalUrl(this, url)
             }
-        }
-    }
-
-    private fun setSourceLabel(sourceName: String){
-        runOnUiThread {
-            sourceLabel.text = sourceName
         }
     }
 }

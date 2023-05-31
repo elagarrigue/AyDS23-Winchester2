@@ -4,9 +4,9 @@ import android.content.Context
 import ayds.aknewyork.external.service.injector.NYTimesInjector
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.ArtistCardBroker
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.LastFMProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.NYTimesProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.WikipediaProxy
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.LastFMProxy
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.NYTimesProxy
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.WikipediaProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
