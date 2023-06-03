@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia
+package ayds.winchester.songinfo.moredetails.data.card.repository.local.card
 
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 

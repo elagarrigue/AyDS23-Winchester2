@@ -1,9 +1,9 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
+package ayds.winchester.songinfo.moredetails.data.card.repository
 
 import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.EmptyInfo
 import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.ArtistInfo
 import ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.CardLocalStorage
 import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import io.mockk.*
 import org.junit.Assert.*

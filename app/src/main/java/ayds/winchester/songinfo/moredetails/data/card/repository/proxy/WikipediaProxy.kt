@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy
+package ayds.winchester.songinfo.moredetails.data.card.repository.proxy
 
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import ayds.winchester.songinfo.moredetails.domain.entity.Source

@@ -1,8 +1,8 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository
+package ayds.winchester.songinfo.moredetails.data.card.repository
 
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.CardsBroker
+import ayds.winchester.songinfo.moredetails.data.card.repository.broker.CardsBroker
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.CardLocalStorage
 import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 
 internal class CardRepositoryImpl(

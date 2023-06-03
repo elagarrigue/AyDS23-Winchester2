@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy
+package ayds.winchester.songinfo.moredetails.data.card.repository.proxy
 
 import ayds.aknewyork.external.service.data.NYTimesService
 import ayds.aknewyork.external.service.data.entities.ArtistDataExternal

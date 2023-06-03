@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb
+package ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb
 
 import android.database.Cursor
 import ayds.winchester.songinfo.moredetails.domain.entity.Card

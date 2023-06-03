@@ -2,15 +2,15 @@ package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
 import ayds.aknewyork.external.service.injector.NYTimesInjector
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.CardRepositoryImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.CardsBrokerImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.LastFMProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.NYTimesProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.WikipediaProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToCardMapper
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToCardMapperImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CardLocalStorageImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.CardRepositoryImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.broker.CardsBrokerImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.LastFMProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.NYTimesProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.WikipediaProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.CardLocalStorage
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CursorToCardMapper
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CursorToCardMapperImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CardLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
 import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
