@@ -4,7 +4,7 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import ayds.winchester.songinfo.moredetails.domain.entity.Source
-import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
+import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 
 interface MoreDetailsPresenter {
     val uiStateObservable: Observable<MoreDetailsUiState>
@@ -12,7 +12,7 @@ interface MoreDetailsPresenter {
 }
 
 internal class MoreDetailsPresenterImpl(
-    private val wikipediaRepository: WikipediaRepository,
+    private val cardRepository: CardRepository,
     private val infoDescriptionHelper: InfoDescriptionHelper,
     private val artistSourceToStringFactory: ArtistSourceToStringFactory,
 ) : MoreDetailsPresenter {
@@ -28,7 +28,7 @@ internal class MoreDetailsPresenterImpl(
     }
 
     private fun getArtistInfo(artistName: String) {
-        val cards = wikipediaRepository.getCards(artistName)
+        val cards = cardRepository.getCards(artistName)
         updateUiState(cards, artistName)
         uiStateObservable.notify(moreDetailsUiState)
     }

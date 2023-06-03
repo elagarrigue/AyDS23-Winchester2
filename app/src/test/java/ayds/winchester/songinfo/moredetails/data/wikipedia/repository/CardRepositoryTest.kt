@@ -4,19 +4,19 @@ import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.EmptyInfo
 import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.ArtistInfo
 import ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
-import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
+import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import io.mockk.*
 import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
 private const val ARTIST = "artist"
-class WikipediaRepositoryTest {
+class CardRepositoryTest {
 
     private val wikipediaLocalStorage: WikipediaLocalStorage = mockk(relaxUnitFun = true)
     private val wikipediaTrackService: ayds.winchester2.wikipediadata.data.wikipedia.WikipediaTrackService = mockk(relaxUnitFun = true)
-    private val wikipediaRepository: WikipediaRepository by lazy {
-        WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
+    private val cardRepository: CardRepository by lazy {
+        CardRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
     }
     private val info = ArtistInfo("description","url")
 
@@ -24,7 +24,7 @@ class WikipediaRepositoryTest {
     fun `given existing artist should return info and mark it as local`() {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns info
 
-        val result = wikipediaRepository.getCards(ARTIST)
+        val result = cardRepository.getCards(ARTIST)
 
         assertEquals(info, result)
         assertTrue(info.isLocallyStored)
@@ -35,7 +35,7 @@ class WikipediaRepositoryTest {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns null
         every { wikipediaTrackService.getInfo(ARTIST) } returns info
 
-        val result = wikipediaRepository.getCards(ARTIST)
+        val result = cardRepository.getCards(ARTIST)
 
         assertEquals(info, result)
         assertFalse(info.isLocallyStored)
@@ -47,7 +47,7 @@ class WikipediaRepositoryTest {
         every { wikipediaLocalStorage.getInfo(ARTIST) } returns null
         every { wikipediaTrackService.getInfo(ARTIST) } throws mockk<Exception>()
 
-        val result = wikipediaRepository.getCards(ARTIST)
+        val result = cardRepository.getCards(ARTIST)
 
         assertEquals(EmptyInfo, result)
     }

@@ -3,11 +3,11 @@ package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.Proxy
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 
-interface Broker {
+interface CardsBroker {
     fun getCards(artistName: String): List<Card>
 }
 
-internal class ArtistCardBroker(private val proxiesList: List<Proxy>): Broker {
+internal class CardsBrokerImpl(private val proxiesList: List<Proxy>): CardsBroker {
     override fun getCards(artistName: String): List<Card>{
         val cardsList = mutableListOf<Card>()
         for(proxy in proxiesList){
