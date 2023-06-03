@@ -5,16 +5,16 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
 
-internal class WikipediaLocalStorageImpl(
+internal class CardLocalStorageImpl(
     context: Context,
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
-    WikipediaLocalStorage {
+    CardLocalStorage {
 
     private val projection = arrayOf(
         COLUMN_ID,
@@ -35,7 +35,7 @@ internal class WikipediaLocalStorageImpl(
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    override fun insertInfo(artistName: String, artist: Card) {
+    override fun insertCard(artistName: String, artist: Card) {
         val values = ContentValues().apply{
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, artist.description)
@@ -47,7 +47,7 @@ internal class WikipediaLocalStorageImpl(
 
     }
 
-    override fun getInfo(artist: String?): List<Card> {
+    override fun getCards(artist: String?): List<Card> {
         val cursor = readableDatabase.query(
             TABLE_NAME,
             projection,

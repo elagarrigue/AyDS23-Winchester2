@@ -7,10 +7,10 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.broker.Car
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.LastFMProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.NYTimesProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.WikipediaProxy
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.WikipediaLocalStorageImpl
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CardLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
 import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
@@ -24,7 +24,7 @@ object MoreDetailsInjector {
     private val artistSourceToStringFactory: ArtistSourceToStringFactory = ArtistSourceToStringFactoryImpl()
 
     private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
-    private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
+    private lateinit var cardLocalStorage: CardLocalStorage
 
     private val wikipediaProxy: WikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
     private val nyTimesProxy : NYTimesProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
@@ -47,10 +47,10 @@ object MoreDetailsInjector {
     }
 
     private fun initLocalStorage(moreDetailsView: MoreDetailsView){
-        wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
+        cardLocalStorage = CardLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
     }
 
     private fun initRepository(){
-        repository = CardRepositoryImpl(wikipediaLocalStorage, artistCardBroker)
+        repository = CardRepositoryImpl(cardLocalStorage, artistCardBroker)
     }
 }
