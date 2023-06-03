@@ -8,8 +8,8 @@ import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.Last
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.NYTimesProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.proxy.WikipediaProxy
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.CardLocalStorage
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToCardMapper
+import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToCardMapperImpl
 import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CardLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
@@ -23,7 +23,7 @@ object MoreDetailsInjector {
     private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(descriptionFormatter)
     private val artistSourceToStringFactory: ArtistSourceToStringFactory = ArtistSourceToStringFactoryImpl()
 
-    private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
+    private val cursorToCardMapper: CursorToCardMapper = CursorToCardMapperImpl()
     private lateinit var cardLocalStorage: CardLocalStorage
 
     private val wikipediaProxy: WikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
@@ -47,7 +47,7 @@ object MoreDetailsInjector {
     }
 
     private fun initLocalStorage(moreDetailsView: MoreDetailsView){
-        cardLocalStorage = CardLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
+        cardLocalStorage = CardLocalStorageImpl( moreDetailsView as Context, cursorToCardMapper)
     }
 
     private fun initRepository(){

@@ -5,12 +5,12 @@ import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import java.sql.SQLException
 import ayds.winchester.songinfo.moredetails.domain.entity.Source
 
-interface CursorToWikipediaInfoMapper {
+interface CursorToCardMapper {
 
     fun map(cursor: Cursor): List<Card>
 }
 
-internal class CursorToWikipediaInfoMapperImpl : CursorToWikipediaInfoMapper {
+internal class CursorToCardMapperImpl : CursorToCardMapper {
 
     override fun map(cursor: Cursor): List<Card> {
         val artistCards = mutableListOf<Card>()

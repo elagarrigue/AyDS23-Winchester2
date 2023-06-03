@@ -12,7 +12,7 @@ private const val DATABASE_NAME = "dictionary.db"
 
 internal class CardLocalStorageImpl(
     context: Context,
-    private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper
+    private val cursorToCardMapper: CursorToCardMapper
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
     CardLocalStorage {
 
@@ -57,7 +57,7 @@ internal class CardLocalStorageImpl(
             null,
             SORT_ORDER_CURSOR
         )
-        val artistCardList = cursorToWikipediaInfoMapper.map(cursor)
+        val artistCardList = cursorToCardMapper.map(cursor)
         cursor.close()
         return artistCardList
     }
