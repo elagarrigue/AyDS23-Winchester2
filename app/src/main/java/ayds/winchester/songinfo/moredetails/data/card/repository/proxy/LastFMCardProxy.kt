@@ -6,7 +6,18 @@ import lisboa4LastFM.ArtistBiography
 import lisboa4LastFM.LastFMService
 
 internal class LastFMCardProxy(private val lastFMService: LastFMService): CardProxy{
-    override fun getCard(artistName: String) = lastFMService.getArtistBiography(artistName)?.map()
+    override fun getCard(artistName: String): Card?{
+        val lastFmArtistBiography = lastFMService.getArtistBiography(artistName)
+
+        val card: Card? =
+            try{
+                lastFmArtistBiography?.map()
+            }
+            catch (e: Exception){
+                null
+            }
+        return card
+    }
 
     private fun ArtistBiography.map() =
         Card(

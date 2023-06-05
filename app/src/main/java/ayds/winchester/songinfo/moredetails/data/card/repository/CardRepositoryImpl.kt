@@ -15,11 +15,9 @@ internal class CardRepositoryImpl(
         when {
             artistCards.isNotEmpty() -> markInfoAsLocal(artistCards)
             else -> {
-                try {
-                    artistCards = cardsBroker.getCards(artist)
-                    for(artistCard in artistCards)
-                        cardLocalStorage.insertCard(artist, artistCard)
-                } catch (e: Exception) {}
+                artistCards = cardsBroker.getCards(artist)
+                for(artistCard in artistCards)
+                    cardLocalStorage.insertCard(artist, artistCard)
             }
         }
         return artistCards
