@@ -11,7 +11,7 @@ internal class NYTimesCardProxy(private val nyTimesService: NYTimesService): Car
         val newYorkTimesArtistInfo = nyTimesService.getArtistInfo(artistName)
 
         val card: Card? = try{
-            newYorkTimesArtistInfo?.map()
+            newYorkTimesArtistInfo.map()
         }
         catch (e :Exception){
             null
