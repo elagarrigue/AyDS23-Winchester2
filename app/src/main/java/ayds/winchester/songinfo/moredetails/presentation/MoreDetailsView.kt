@@ -81,8 +81,9 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
 
     private fun initCard() {
         if(artistCards.isEmpty())
-            artistCards = listOf(Card(description = "No results", infoURL = "No results", sourceLogoUrl = "No results"))
-        updateCardView(artistCards.first())
+            updateCardViewWhenNoResults()
+        else
+            updateCardView(artistCards.first())
     }
 
     private fun initSpinner(spinnerValues: List<String>) {
@@ -99,10 +100,18 @@ class MoreDetailsViewImpl: AppCompatActivity(), MoreDetailsView{
                 index: Int,
                 id: Long
             ) {
-                updateCardView(artistCards[index])
+                if(artistCards.isNotEmpty())
+                    updateCardView(artistCards[index])
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun updateCardViewWhenNoResults(){
+        loadSourceLogo("No results")
+        setArtistDescription("No results")
+        setUrl("No results")
+        setSourceLabel("Not found")
     }
 
     private fun updateCardView(card: Card) {

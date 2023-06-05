@@ -12,7 +12,6 @@ internal class ArtistSourceToStringFactoryImpl : ArtistSourceToStringFactory {
             Source.LastFM -> LastFMSourceToStringMapper().map()
             Source.NYTimes -> NewYorkTimesSourceToStringMapper().map()
             Source.Wikipedia -> WikipediaSourceToStringMapper().map()
-            Source.NotFound -> EmptySourceToStringMapper().map()
         }
 }
 
@@ -33,9 +32,4 @@ internal class NewYorkTimesSourceToStringMapper: SourceToStringMapper {
 internal class WikipediaSourceToStringMapper: SourceToStringMapper {
     override fun map() =
         "Wikipedia"
-}
-
-internal class EmptySourceToStringMapper: SourceToStringMapper {
-    override fun map() =
-        "No results"
 }

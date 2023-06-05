@@ -36,7 +36,7 @@ internal class MoreDetailsPresenterImpl(
     private fun updateUiState(artistCards: List<Card>, artistName: String) {
         moreDetailsUiState = if (artistCards.isEmpty()) {
             moreDetailsUiState.copy(
-                spinnerValues = listOf(Source.NotFound.toString())
+                spinnerValues = listOf("Not found")
             )
         } else {
             moreDetailsUiState.copy(
