@@ -7,9 +7,9 @@ import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo
 
 internal class WikipediaCardProxy(private val wikipediaTrackService: WikipediaTrackService): CardProxy {
     override fun getCard(artistName: String): Card? {
-        val wikipediaTrackService = wikipediaTrackService.getInfo(artistName)
         val card: Card? =
             try{
+                val wikipediaTrackService = wikipediaTrackService.getInfo(artistName)
                 wikipediaTrackService?.map()
             }
             catch(e: Exception){null}

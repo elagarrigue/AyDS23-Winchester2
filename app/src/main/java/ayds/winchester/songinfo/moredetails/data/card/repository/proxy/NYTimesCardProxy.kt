@@ -8,9 +8,8 @@ import ayds.winchester.songinfo.moredetails.domain.entity.Source
 
 internal class NYTimesCardProxy(private val nyTimesService: NYTimesService): CardProxy {
     override fun getCard(artistName: String):Card?{
-        val newYorkTimesArtistInfo = nyTimesService.getArtistInfo(artistName)
-
         val card: Card? = try{
+            val newYorkTimesArtistInfo = nyTimesService.getArtistInfo(artistName)
             newYorkTimesArtistInfo.map()
         }
         catch (e :Exception){
