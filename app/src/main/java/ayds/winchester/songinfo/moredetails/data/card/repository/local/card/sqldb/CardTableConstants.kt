@@ -6,7 +6,7 @@ const val COLUMN_INFO = "info"
 const val COLUMN_URL = "url"
 const val COLUMN_SOURCE_LOGO_URL = "source_logo_url"
 const val COLUMN_SOURCE = "source"
-const val TABLE_NAME = "artists"
+const val TABLE_NAME = "cards"
 const val COLUMNS_FOR_WHERE = "$COLUMN_ARTIST = ?"
 const val SORT_ORDER_CURSOR = "$COLUMN_ARTIST DESC"
 const val SQL_CREATE_TABLE =

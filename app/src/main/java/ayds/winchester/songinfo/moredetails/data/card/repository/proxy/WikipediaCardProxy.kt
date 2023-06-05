@@ -5,7 +5,7 @@ import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import ayds.winchester2.wikipediaexternal.data.wikipedia.WikipediaTrackService
 import ayds.winchester2.wikipediaexternal.data.wikipedia.entity.ArtistInfo
 
-internal class WikipediaProxy(private val wikipediaTrackService: WikipediaTrackService): Proxy {
+internal class WikipediaCardProxy(private val wikipediaTrackService: WikipediaTrackService): CardProxy {
     override fun getCard(artistName: String) =
         wikipediaTrackService.getInfo(artistName)?.map()
 

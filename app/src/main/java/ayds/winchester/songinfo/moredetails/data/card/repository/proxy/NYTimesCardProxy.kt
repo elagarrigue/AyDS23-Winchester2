@@ -6,7 +6,7 @@ import ayds.aknewyork.external.service.data.entities.NYT_LOGO_URL
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 import ayds.winchester.songinfo.moredetails.domain.entity.Source
 
-internal class NYTimesProxy(private val nyTimesService: NYTimesService): Proxy {
+internal class NYTimesCardProxy(private val nyTimesService: NYTimesService): CardProxy {
     override fun getCard(artistName: String) = nyTimesService.getArtistInfo(artistName).map()
 
     private fun ArtistDataExternal.map() =

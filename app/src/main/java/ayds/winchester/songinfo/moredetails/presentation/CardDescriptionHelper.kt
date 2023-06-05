@@ -2,11 +2,11 @@ package ayds.winchester.songinfo.moredetails.presentation
 
 import ayds.winchester.songinfo.moredetails.domain.entity.Card
 
-interface InfoDescriptionHelper {
+interface CardDescriptionHelper {
     fun getInfoDescriptionText(artistInfo: Card, artistName: String = ""): String
 }
 
-internal class InfoDescriptionHelperImpl(private val descriptionFormatter: DescriptionFormatter): InfoDescriptionHelper {
+internal class CardDescriptionHelperImpl(private val descriptionFormatter: DescriptionFormatter): CardDescriptionHelper {
     override fun getInfoDescriptionText(artistInfo: Card, artistName: String) =
         "${
             if (artistInfo.isLocallyStored) "[*]" else ""

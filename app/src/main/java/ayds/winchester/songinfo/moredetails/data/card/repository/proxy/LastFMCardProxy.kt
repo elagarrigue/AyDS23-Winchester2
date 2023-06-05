@@ -5,7 +5,7 @@ import ayds.winchester.songinfo.moredetails.domain.entity.Source
 import lisboa4LastFM.ArtistBiography
 import lisboa4LastFM.LastFMService
 
-internal class LastFMProxy(private val lastFMService: LastFMService): Proxy{
+internal class LastFMCardProxy(private val lastFMService: LastFMService): CardProxy{
     override fun getCard(artistName: String) = lastFMService.getArtistBiography(artistName)?.map()
 
     private fun ArtistBiography.map() =

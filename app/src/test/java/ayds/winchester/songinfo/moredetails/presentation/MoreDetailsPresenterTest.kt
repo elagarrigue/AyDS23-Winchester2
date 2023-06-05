@@ -14,14 +14,14 @@ class MoreDetailsPresenterTest {
     private val artistInfo = ArtistInfo("Some info", "Some url")
     private val emptyInfo = EmptyInfo
     private val cardRepository = mockk<CardRepository>(relaxUnitFun = true)
-    private val infoDescriptionHelper = mockk<InfoDescriptionHelper>(relaxUnitFun = true)
-    private val presenter = MoreDetailsPresenterImpl(cardRepository, infoDescriptionHelper)
+    private val cardDescriptionHelper = mockk<CardDescriptionHelper>(relaxUnitFun = true)
+    private val presenter = MoreDetailsPresenterImpl(cardRepository, cardDescriptionHelper)
 
     @Test
     fun `Given an artist name when getArtistInfo is called then should call the correct methods from the repository and notify the ui state observable with the expected ui state`() {
         val expectedUiState = MoreDetailsUiState(artistInfoDescription = "Some info", artistInfoUrl = "Some url")
         every { cardRepository.getCards(ARTIST_NAME_TEST) } returns artistInfo
-        every { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) } returns "Some info"
+        every { cardDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) } returns "Some info"
 
         val infoTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
         presenter.uiStateObservable.subscribe {
@@ -30,7 +30,7 @@ class MoreDetailsPresenterTest {
         presenter.fetchArtistInfo(ARTIST_NAME_TEST)
 
         verify { cardRepository.getCards(ARTIST_NAME_TEST) }
-        verify { infoDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) }
+        verify { cardDescriptionHelper.getInfoDescriptionText(artistInfo, ARTIST_NAME_TEST) }
         verify { infoTester(expectedUiState) }
     }
 

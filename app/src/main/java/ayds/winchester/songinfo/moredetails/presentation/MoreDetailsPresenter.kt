@@ -13,7 +13,7 @@ interface MoreDetailsPresenter {
 
 internal class MoreDetailsPresenterImpl(
     private val cardRepository: CardRepository,
-    private val infoDescriptionHelper: InfoDescriptionHelper,
+    private val cardDescriptionHelper: CardDescriptionHelper,
     private val artistSourceToStringFactory: ArtistSourceToStringFactory,
 ) : MoreDetailsPresenter {
 
@@ -56,7 +56,7 @@ internal class MoreDetailsPresenterImpl(
 
     private fun formatArtistCards(artistCards: List<Card>, artistName: String): List<Card>{
         val formattedCards = artistCards.map {card ->
-            val formattedDescription = infoDescriptionHelper.getInfoDescriptionText(card, artistName)
+            val formattedDescription = cardDescriptionHelper.getInfoDescriptionText(card, artistName)
             Card(
                 description = formattedDescription,
                 infoURL = card.infoURL,

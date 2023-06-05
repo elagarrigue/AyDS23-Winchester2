@@ -12,7 +12,7 @@ private const val URL = "url"
 class CardDescriptionHelperImplTest {
 
     private val descriptionFormatter = mockk<DescriptionFormatter>(relaxUnitFun = true)
-    private val helper = InfoDescriptionHelperImpl(descriptionFormatter)
+    private val helper = CardDescriptionHelperImpl(descriptionFormatter)
 
     @Test
     fun `getInfoDescriptionText should return formatted description with local indicator when ArtistInfo is locally stored`() {
