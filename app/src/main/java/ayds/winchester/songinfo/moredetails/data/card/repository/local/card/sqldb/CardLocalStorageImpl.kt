@@ -1,26 +1,28 @@
-package ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb
+package ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
+import ayds.winchester.songinfo.moredetails.domain.entity.Card
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.CardLocalStorage
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
 
-internal class WikipediaLocalStorageImpl(
+internal class CardLocalStorageImpl(
     context: Context,
-    private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper
+    private val cursorToCardMapper: CursorToCardMapper
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
-    WikipediaLocalStorage {
+    CardLocalStorage {
 
     private val projection = arrayOf(
         COLUMN_ID,
         COLUMN_ARTIST,
         COLUMN_INFO,
-        COLUMN_URL
+        COLUMN_URL,
+        COLUMN_SOURCE_LOGO_URL,
+        COLUMN_SOURCE
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -33,21 +35,19 @@ internal class WikipediaLocalStorageImpl(
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    override fun insertInfo(artistName: String, artist: ArtistInfo) {
+    override fun insertCard(artistName: String, artist: Card) {
         val values = ContentValues().apply{
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, artist.description)
-            put(COLUMN_URL, artist.wikipediaURL)
-            put(
-                COLUMN_SOURCE,
-                VALUE_SOURCE
-            )
+            put(COLUMN_URL, artist.infoURL)
+            put(COLUMN_SOURCE_LOGO_URL, artist.sourceLogoUrl)
+            put(COLUMN_SOURCE, artist.source.ordinal)
         }
         writableDatabase.insert(TABLE_NAME, null, values)
 
     }
 
-    override fun getInfo(artist: String?): ArtistInfo? {
+    override fun getCards(artist: String?): List<Card> {
         val cursor = readableDatabase.query(
             TABLE_NAME,
             projection,
@@ -57,8 +57,8 @@ internal class WikipediaLocalStorageImpl(
             null,
             SORT_ORDER_CURSOR
         )
-        val artistInfo = cursorToWikipediaInfoMapper.map(cursor)
+        val artistCardList = cursorToCardMapper.map(cursor)
         cursor.close()
-        return artistInfo
+        return artistCardList
     }
 }

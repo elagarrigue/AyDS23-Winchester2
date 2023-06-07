@@ -1,0 +1,9 @@
+[submodule "libs/WikipediaData"]
+	path = libs/WikipediaData
+	url = https://github.com/AldanaNonnenmacher/AyDS23-Winchester2-SubModuleWikipedia.git
+[submodule "libs/NYTimesData"]
+	path = libs/NYTimesData
+	url = git@github.com:JCRossi/AyDSNewYork2-NYTimes.git
+[submodule "libs/LastFMData"]
+	path = libs/LastFMData
+	url = git@github.com:alvaromosconi/LastFM_API.git

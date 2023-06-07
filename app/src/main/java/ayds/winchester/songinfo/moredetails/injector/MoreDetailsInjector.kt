@@ -1,37 +1,38 @@
 package ayds.winchester.songinfo.moredetails.injector
 
 import android.content.Context
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.WikipediaRepositoryImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.WikipediaTrackService
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.*
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.JsonToInfoResolver
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.WikipediaTrackAPI
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.external.wikipedia.tracks.WikipediaTrackServiceImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.WikipediaLocalStorage
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapper
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.CursorToWikipediaInfoMapperImpl
-import ayds.winchester.songinfo.moredetails.data.wikipedia.repository.local.wikipedia.sqldb.WikipediaLocalStorageImpl
-import ayds.winchester.songinfo.moredetails.domain.repository.WikipediaRepository
+import ayds.aknewyork.external.service.injector.NYTimesInjector
+import ayds.winchester.songinfo.moredetails.data.card.repository.CardRepositoryImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.broker.CardsBrokerImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.LastFMCardProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.NYTimesCardProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.proxy.WikipediaCardProxy
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.CardLocalStorage
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CursorToCardMapper
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CursorToCardMapperImpl
+import ayds.winchester.songinfo.moredetails.data.card.repository.local.card.sqldb.CardLocalStorageImpl
+import ayds.winchester.songinfo.moredetails.domain.repository.CardRepository
 import ayds.winchester.songinfo.moredetails.presentation.*
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import ayds.winchester2.wikipediaexternal.injector.WikipediaInjector
+import lisboa4LastFM.LastFMInjector
 
-private const val WIKIPEDIA_URL = "https://en.wikipedia.org/w/"
 
 object MoreDetailsInjector {
 
-    private val wikipediaAPIRetrofit = getRetrofit()
-    private val wikipediaTrackAPI = getWikipediaAPI(wikipediaAPIRetrofit)
-    private val wikipediaToInfoResolver: WikipediaToInfoResolver = JsonToInfoResolver()
-    private val wikipediaTrackService: WikipediaTrackService = WikipediaTrackServiceImpl(wikipediaTrackAPI, wikipediaToInfoResolver)
-
     private val descriptionFormatter: DescriptionFormatter = HtmlDescriptionFormatter()
-    private val infoDescriptionHelper: InfoDescriptionHelper = InfoDescriptionHelperImpl(descriptionFormatter)
+    private val cardDescriptionHelper: CardDescriptionHelper = CardDescriptionHelperImpl(descriptionFormatter)
+    private val artistSourceToStringFactory: ArtistSourceToStringFactory = ArtistSourceToStringFactoryImpl()
 
-    private val cursorToWikipediaInfoMapper: CursorToWikipediaInfoMapper = CursorToWikipediaInfoMapperImpl()
-    private lateinit var wikipediaLocalStorage: WikipediaLocalStorage
+    private val cursorToCardMapper: CursorToCardMapper = CursorToCardMapperImpl()
+    private lateinit var cardLocalStorage: CardLocalStorage
 
-    private lateinit var repository: WikipediaRepository
+    private val wikipediaProxy: WikipediaCardProxy = WikipediaCardProxy(WikipediaInjector.wikipediaTrackService)
+    private val nyTimesProxy : NYTimesCardProxy = NYTimesCardProxy(NYTimesInjector.nyTimesService)
+    private val lastFMProxy: LastFMCardProxy = LastFMCardProxy(LastFMInjector.getLastFmService())
+    private val proxiesList = listOf(wikipediaProxy, nyTimesProxy, lastFMProxy)
+    private val artistCardBroker: CardsBrokerImpl = CardsBrokerImpl(proxiesList)
+
+    private lateinit var repository: CardRepository
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     fun init(moreDetailsView: MoreDetailsView){
@@ -41,22 +42,15 @@ object MoreDetailsInjector {
     }
 
     private fun initMoreDetailsPresenter(moreDetailsView: MoreDetailsView){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, infoDescriptionHelper)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(repository, cardDescriptionHelper, artistSourceToStringFactory)
         moreDetailsView.setMoreDetailsPresenter(moreDetailsPresenter)
     }
 
     private fun initLocalStorage(moreDetailsView: MoreDetailsView){
-        wikipediaLocalStorage = WikipediaLocalStorageImpl( moreDetailsView as Context, cursorToWikipediaInfoMapper)
+        cardLocalStorage = CardLocalStorageImpl( moreDetailsView as Context, cursorToCardMapper)
     }
 
     private fun initRepository(){
-        repository = WikipediaRepositoryImpl(wikipediaLocalStorage, wikipediaTrackService)
+        repository = CardRepositoryImpl(cardLocalStorage, artistCardBroker)
     }
-
-    private fun getRetrofit() = Retrofit.Builder()
-        .baseUrl(WIKIPEDIA_URL)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .build()
-
-    private fun getWikipediaAPI(retrofit: Retrofit) = retrofit.create(WikipediaTrackAPI::class.java)
 }

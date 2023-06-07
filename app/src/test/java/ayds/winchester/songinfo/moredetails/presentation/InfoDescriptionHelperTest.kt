@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.presentation
 
-import ayds.winchester.songinfo.moredetails.domain.entity.Info.ArtistInfo
+import ayds.winchester2.wikipediadata.data.wikipedia.entity.Info.ArtistInfo
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -9,10 +9,10 @@ import org.junit.Test
 private const val ARTIST_NAME = "The Beatles"
 private const val DESCRIPTION = "The Beatles were an English rock band formed in Liverpool in 1960."
 private const val URL = "url"
-class InfoDescriptionHelperImplTest {
+class CardDescriptionHelperImplTest {
 
     private val descriptionFormatter = mockk<DescriptionFormatter>(relaxUnitFun = true)
-    private val helper = InfoDescriptionHelperImpl(descriptionFormatter)
+    private val helper = CardDescriptionHelperImpl(descriptionFormatter)
 
     @Test
     fun `getInfoDescriptionText should return formatted description with local indicator when ArtistInfo is locally stored`() {
